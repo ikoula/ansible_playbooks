@@ -1,0 +1,12 @@
+---
+- hosts: all
+  connection: local
+  user: root
+  gather_facts: yes
+  
+  roles:
+    - packages
+    - php
+    - mysql
+    - wordpress
+...
