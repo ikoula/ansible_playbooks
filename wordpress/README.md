@@ -1,7 +1,7 @@
 Role Name
 =========
 
-This role deploy Wordpress with LAMP stack 
+This role deploy Wordpress with LAMP stack on Debian 9
 
 License
 -------
