@@ -24,7 +24,7 @@
 
 - name: "Add the VM ip address as trusted domain in the Nextcloud config"
   lineinfile:
-    path: /var/www/nextcloud/config/config.php
+    dest: /var/www/nextcloud/config/config.php
     insertafter: "   0 => 'localhost',"
     line: "    1 => '{{ eth0_ipaddress.stdout }}'"
 
