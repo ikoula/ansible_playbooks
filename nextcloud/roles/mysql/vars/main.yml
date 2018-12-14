@@ -1,0 +1,5 @@
+---
+nc_mysql_db: nextcloud
+nc_mysql_user: admin
+nc_mysql_pwd: "{{ NC_MYSQL_PASSWD }}" 
+...

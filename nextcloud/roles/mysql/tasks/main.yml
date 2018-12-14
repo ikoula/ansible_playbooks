@@ -1,0 +1,10 @@
+---
+- name: "Create MySQL nextcloud database"
+  mysql_db: name={{ nc_mysql_db }} state=present
+
+- name: "Create MySQL nextcloud user"
+  mysql_user: 
+    name={{ nc_mysql_user }} 
+    password={{ nc_mysql_pwd }} 
+    priv=*.*:ALL
+...

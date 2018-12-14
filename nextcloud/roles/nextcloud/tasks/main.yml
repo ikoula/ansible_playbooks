@@ -1,0 +1,36 @@
+---
+- name: "Download and extract the latest NextCloud archive"
+  unarchive:
+    src: 'https://download.nextcloud.com/server/releases/latest.zip'
+    remote_src: true
+    dest: '/var/www/'
+    validate_certs: no
+
+- name: "Update Apache DocumentRoot"
+  lineinfile:
+    dest=/etc/apache2/sites-enabled/000-default.conf
+    regexp="(.)+DocumentRoot /var/www/html"
+    line="DocumentRoot /var/www/nextcloud"
+  notify:
+    - restart apache
+     
+- name: "Get Ip address of eth0"
+  shell: curl -s ifconfig.co
+  register: eth0_ipaddress
+
+- name: "Installation - ensure nextcloud installation is finished"
+  become: www-data
+  command: 'php /var/www/nextcloud/occ maintenance:install --database "mysql" --database-name "{{ nc_mysql_db }}" --database-host "localhost"  --database-user "root" --database-pass "{{ nc_mysql_pwd }}" --admin-user "{{ nc_admin_user }}" --admin-pass "{{ nc_admin_pwd }}" --data-dir "{{ nc_dataroot }}"'
+
+- name: "Add the VM ip address as trusted domain in the Nextcloud config"
+  lineinfile:
+    path: /var/www/nextcloud/config/config.php
+    insertafter: "   0 => 'localhost',"
+    line: "    1 => '{{ eth0_ipaddress.stdout }}'"
+
+- name: "Set www-data as owner of Owncloud directory"
+  file:
+    path: /var/www/nextcloud
+    owner: www-data
+    group: www-data
+    recurse: yes

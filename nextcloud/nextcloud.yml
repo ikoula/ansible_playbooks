@@ -1,0 +1,11 @@
+---
+- hosts: all
+  connection: local
+  user: root
+  gather_facts: yes
+  
+  roles:
+    - system
+    - mysql
+    - nextcloud
+...
