@@ -1,6 +1,6 @@
 ---
-nc_admin_user: "{{ NC_ADMINL_USER }}"
-nc_admin_pwd: "{{ NC_ADMIN_PASSWORD }}"
+nc_admin_user: "{{ NC_ADMIN_USER }}"
+nc_admin_pwd: "{{ NC_ADMIN_PASSWD }}"
 nc_dataroot: /var/www/nextcloud/data
 ...
 
