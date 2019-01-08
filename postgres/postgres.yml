@@ -1,0 +1,37 @@
+---
+- name: "Postgresql installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Add the Postgresql repo key for APT"
+    apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+  - name: "Add the APT Postgresql repo"
+    apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main' update_cache=yes state=present
+
+  - name: "Ensure locale is available"
+    locale_gen: name=fr_FR.UTF-8
+
+  - name: "Install the Postgresql packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - postgresql
+      - postgresql-client
+      - postgresql-contrib
+      - python-psycopg2
+
+  - name: "Start and enable Postgresql service"
+    service: name=postgresql state=started enabled=yes
+
+  - name: "Create postgresql database"
+    postgresql_db: name={{ pg_dbname }} 
+    become: true
+    become_user: postgres
+
+  - name: "Create postgresql user"
+    postgresql_user: name={{ pg_user }} password={{ pg_pass }} db={{ pg_dbname }} priv=ALL
+    become: true
+    become_user: postgres
+
+...
