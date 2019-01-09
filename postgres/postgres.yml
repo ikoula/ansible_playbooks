@@ -30,7 +30,7 @@
     become_user: postgres
 
   - name: "Create postgresql user"
-    postgresql_user: name={{ pg_user }} password={{ pg_pass }} db={{ pg_dbname }} priv=ALL
+    postgresql_user: name={{ pg_user }} password={{ pg_pass }} db={{ pg_dbname }} encrypted=yes priv=ALL
     become: true
     become_user: postgres
 
