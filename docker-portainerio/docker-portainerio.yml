@@ -1,11 +1,11 @@
 ---
-- name: "Docker with Portainer.io installation"
+- name: "Docker install"
   hosts: all
   remote_user: root
 
   tasks:
-  - name: "Installation of required packages :"
-    apt: pkg={{ item }} update_cache=yes state=present
+  - name: "Install prerequies packages :"
+    apt: pkg={{ item }} update_cache=no state=present
     with_items:
       - apt-transport-https
       - ca-certificates
@@ -13,22 +13,26 @@
       - gnupg2
       - software-properties-common
       - python-pip
-      - docker-ce
 
-  - name: "Add Docker APT repo"
-    apt_repository: repo='deb https://download.docker.com/linux/debian stretch stable' state=present
+  - name: "Add Docker repo"
+    apt_repository: repo='deb https://download.docker.com/linux/debian stretch stable' state=present update_cache=no
 
   - name: "Add APT key of Docker repo :"
     apt_key: url='https://download.docker.com/linux/debian/gpg' state=present
 
-  - name: "Start and enable Docker service"
+  - name: "Install Docker packages :"
+    apt: pkg={{ item }} update_cache=yes state=present
+    with_items:
+      - docker-ce
+
+  - name: "Start and enable docker unit"
     service: name=docker state=started enabled=yes
 
   - name: "Install docker-py pip module"
     pip:
       name: docker-py
 
-  - name: "Run Portainer.io container"
+  - name: "Run Portainer Container"
     docker_container:
       name: portainer
       image: portainer/portainer
@@ -44,7 +48,7 @@
     shell: curl -s ifconfig.co
     register: eth0_ipaddress
 
-  - name: "Configure admin's password"
+  - name: Configure admin user password
     uri:
       url: "http://{{ eth0_ipaddress.stdout }}:9000/api/users/admin/init"
       method: POST
