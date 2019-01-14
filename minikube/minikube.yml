@@ -1,0 +1,78 @@
+---
+- name: "Installation Minikube (kubernetes local cluster)"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Installation of required packages :"
+    apt: pkg={{ item }} update_cache=no state=present
+    with_items:
+      - apt-transport-https
+      - curl
+      - dirmngr
+
+  - name: "Add Docker APT repo"
+    apt_repository: 
+      repo: 'deb https://download.docker.com/linux/debian stretch stable'
+      update_cache: no
+      state: present
+
+  - name: "Add APT key for Docker repo :"
+    apt_key:
+      url: 'https://download.docker.com/linux/debian/gpg'
+      state: present
+
+  - name: "Install Docker"
+    apt:
+      pkg: docker-ce=18.06.1~ce~3-0~debian
+      update_cache: yes
+      state: present
+
+  - name: "Enable and start Docker service"
+    service: 
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: "Get Ip address of eth0"
+    shell: curl -s ifconfig.co
+    register: eth0_ipaddress
+
+  - name: "Add line in /etc/hosts"
+    lineinfile:
+      path: /etc/hosts
+      line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }}"
+ 
+  - name: "Get Minikube binary"
+    get_url:
+      url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      dest: /usr/local/bin/minikube
+      mode: 0755
+ 
+  - name: "Get the latest stable version of kubectl"
+    shell: "curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt"
+    register: latest_kubectl
+
+  - name: "Get kubectl binary"
+    get_url:
+      url: "https://storage.googleapis.com/kubernetes-release/release/{{ latest_kubectl.stdout }}/bin/linux/amd64/kubectl"
+      dest: /usr/local/bin/kubectl
+      mode: 0755
+
+  - name: "Create kube config directory"
+    file: 
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+    with_items:
+      - { path: '/root/.kube', state: 'directory' }    
+      - { path: '/root/.kube/config', state: 'touch' }    
+
+  - name: "Start Minikube"
+    shell: minikube start --vm-driver=none
+    environment:
+      KUBECONFIG=$HOME/.kube/config
+      MINIKUBE_WANTUPDATENOTIFICATION=false
+      MINIKUBE_WANTREPORTERRORPROMPT=false
+      MINIKUBE_HOME=$HOME
+      CHANGE_MINIKUBE_NONE_USER=true
+...
