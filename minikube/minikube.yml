@@ -11,6 +11,8 @@
       - apt-transport-https
       - curl
       - dirmngr
+      - socat
+      - ebtables  
 
   - name: "Add Docker APT repo"
     apt_repository: 
@@ -35,6 +37,15 @@
       state: started
       enabled: yes
 
+  - name: "Disable Swap"
+    command: swapoff -a
+
+  - name: "Remove swap from /etc/fstab"
+    mount: 
+      name: swap
+      fstype: swap
+      state: absent
+
   - name: "Get Ip address of eth0"
     shell: curl -s ifconfig.co
     register: eth0_ipaddress
@@ -42,7 +53,7 @@
   - name: "Add line in /etc/hosts"
     lineinfile:
       dest: /etc/hosts
-      line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }}"
+      line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }} minikube"
  
   - name: "Get Minikube binary"
     get_url:
@@ -80,7 +91,7 @@
       - export CHANGE_MINIKUBE_NONE_USER='true'
       
   - name: "Start Minikub"      
-    shell: source /root/.bashrc && minikube start --vm-driver=none
+    shell: source /root/.bashrc ; minikube start --vm-driver=none
     args:
       executable: /bin/bash
 ...
