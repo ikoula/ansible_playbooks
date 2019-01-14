@@ -80,18 +80,14 @@
       - { path: '/root/.kube/config', state: 'touch' }    
 
   - name: "ADD Minikube environment variables in bashrc"
-    lineinfile:
-      dest: /root/.bashrc
-      line: "{{ item }}"
-    with_items:
-      - export KUBECONFIG='$HOME/.kube/config'
-      - export MINIKUBE_WANTUPDATENOTIFICATION='false'
-      - export MINIKUBE_WANTREPORTERRORPROMPT='false'
-      - export MINIKUBE_HOME='$HOME'
-      - export CHANGE_MINIKUBE_NONE_USER='true'
-      
-  - name: "Start Minikub"      
-    shell: source /root/.bashrc ; minikube start --vm-driver=none
+    shell: "{{ item }}"
     args:
-      executable: /bin/bash
+      execxutable: /bin/bash
+    with_items:
+      - export MINIKUBE_WANTUPDATENOTIFICATION=false
+      - export MINIKUBE_WANTREPORTERRORPROMPT=false
+      - export MINIKUBE_HOME=$HOME
+      - export CHANGE_MINIKUBE_NONE_USER=true
+      - export KUBECONFIG=$HOME/.kube/config
+      - minikube start --vm-driver=none
 ...
