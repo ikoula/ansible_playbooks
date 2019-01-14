@@ -40,7 +40,7 @@
 
   - name: "Add line in /etc/hosts"
     lineinfile:
-      path: /etc/hosts
+      dest: /etc/hosts
       line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }}"
  
   - name: "Get Minikube binary"
