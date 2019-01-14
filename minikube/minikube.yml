@@ -82,7 +82,7 @@
   - name: "ADD Minikube environment variables in bashrc"
     shell: "{{ item }}"
     args:
-      execxutable: /bin/bash
+      executable: /bin/bash
     with_items:
       - export MINIKUBE_WANTUPDATENOTIFICATION=false
       - export MINIKUBE_WANTREPORTERRORPROMPT=false
