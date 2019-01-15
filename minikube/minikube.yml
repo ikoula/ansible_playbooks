@@ -1,5 +1,5 @@
 ---
-- name: "Installation Minikube (kubernetes local cluster)"
+- name: "Installation Minikube (single-node kubernetes local cluster)"
   hosts: all
   remote_user: root
 
@@ -84,10 +84,13 @@
     args:
       executable: /bin/bash
     with_items:
-      - export MINIKUBE_WANTUPDATENOTIFICATION=false
-      - export MINIKUBE_WANTREPORTERRORPROMPT=false
-      - export MINIKUBE_HOME=$HOME
-      - export CHANGE_MINIKUBE_NONE_USER=true
-      - export KUBECONFIG=$HOME/.kube/config
-      - minikube start --vm-driver=none --kubernetes-version="v1.10.0"
+      - MINIKUBE_HOME=$HOME
+      - CHANGE_MINIKUBE_NONE_USER=true
+      - KUBECONFIG=$HOME/.kube/config
+      - minikube stop
+      - minikube delete
+      - rm -rf /etc/kubernetes
+      - minikube config set WantUpdateNotification false
+      - minikube config set WantReportErrorPrompt false
+      - minikube start --vm-driver=none"
 ...
