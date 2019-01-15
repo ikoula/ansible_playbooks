@@ -79,6 +79,17 @@
       - { path: '/root/.kube', state: 'directory' }    
       - { path: '/root/.kube/config', state: 'touch' }    
 
+  - name: "Add env variables to root .bashrc"
+    lineinfile:
+      dest: /root/.bashrc
+      line: "{{ item }}"
+    with_items:
+      - export KUBECONFIG='$HOME/.kube/config'
+      - export MINIKUBE_WANTUPDATENOTIFICATION='false'
+      - export MINIKUBE_WANTREPORTERRORPROMPT='false'
+      - export MINIKUBE_HOME='$HOME'
+      - export CHANGE_MINIKUBE_NONE_USER='true'
+
   - name: "Export environment variables and start Minikube"
     shell: "{{ item }}"
     args:
