@@ -87,10 +87,6 @@
       - MINIKUBE_HOME=$HOME
       - CHANGE_MINIKUBE_NONE_USER=true
       - KUBECONFIG=$HOME/.kube/config
-      - minikube stop
-      - minikube delete
       - rm -rf /etc/kubernetes
-      - minikube config set WantUpdateNotification false
-      - minikube config set WantReportErrorPrompt false
       - minikube start --vm-driver=none"
 ...
