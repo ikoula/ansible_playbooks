@@ -79,7 +79,7 @@
       - { path: '/root/.kube', state: 'directory' }    
       - { path: '/root/.kube/config', state: 'touch' }    
 
-  - name: "ADD Minikube environment variables in bashrc"
+  - name: "Export environment variables and start Minikube"
     shell: "{{ item }}"
     args:
       executable: /bin/bash
@@ -89,5 +89,5 @@
       - export MINIKUBE_HOME=$HOME
       - export CHANGE_MINIKUBE_NONE_USER=true
       - export KUBECONFIG=$HOME/.kube/config
-      - minikube start --vm-driver=none
+      - minikube start --vm-driver=none --kubernetes-version="v1.10.0"
 ...
