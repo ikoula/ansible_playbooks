@@ -88,5 +88,5 @@
       - CHANGE_MINIKUBE_NONE_USER=true
       - KUBECONFIG=$HOME/.kube/config
       - rm -rf /etc/kubernetes
-      - minikube start --vm-driver=none"
+      - minikube start --vm-driver=none
 ...
