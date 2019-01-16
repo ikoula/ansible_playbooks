@@ -91,7 +91,7 @@
       - export KUBECONFIG='$HOME/.kube/config'
 
   - name: "Start Minikube"
-    shell: {{ item }}
+    shell: "{{ item }}"
     with_items:
       - minikube stop
       - minikube delete
