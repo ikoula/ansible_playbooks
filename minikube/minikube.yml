@@ -93,8 +93,9 @@
   - name: "Start Minikube"
     shell: "{{ item }}"
     with_items:
+      - minikube start --vm-driver=none 
       - minikube stop
       - minikube delete
       - rm -rf /etc/kubernetes
-      - minikube start --vm-driver=none 
+      - minikube start --vm-driver=none
 ...
