@@ -53,7 +53,7 @@
   - name: "Add line in /etc/hosts"
     lineinfile:
       dest: /etc/hosts
-      line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }} minikube"
+      line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}.cluster {{ ansible_hostname }}"
  
   - name: "Get Minikube binary"
     get_url:
@@ -84,12 +84,17 @@
       dest: /root/.bashrc
       line: "{{ item }}"
     with_items:
-      - export KUBECONFIG='$HOME/.kube/config'
       - export MINIKUBE_WANTUPDATENOTIFICATION='false'
       - export MINIKUBE_WANTREPORTERRORPROMPT='false'
-      - export MINIKUBE_HOME='$HOME'
       - export CHANGE_MINIKUBE_NONE_USER='true'
+      - export MINIKUBE_HOME='$HOME'
+      - export KUBECONFIG='$HOME/.kube/config'
 
   - name: "Start Minikube"
-    shell: minikube start --vm-driver=none 
+    shell: {{ item }}
+    with_items:
+      - minikube stop
+      - minikube delete
+      - rm -rf /etc/kubernetes
+      - minikube start --vm-driver=none 
 ...
