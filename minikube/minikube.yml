@@ -87,11 +87,12 @@
       - export MINIKUBE_WANTUPDATENOTIFICATION='false'
       - export MINIKUBE_WANTREPORTERRORPROMPT='false'
       - export CHANGE_MINIKUBE_NONE_USER='true'
-      - export MINIKUBE_HOME='$HOME/.kube/.minikube'
+      - export MINIKUBE_HOME='$HOME/.minikube'
       - export KUBECONFIG='$HOME/.kube/config'
 
   - name: "Start Minikube"
-    shell: minikube start --vm-driver=none
+    shell: "MINIKUBE_HOME='/root/.minikube' && minikube start --vm-driver=none"
     args:
       chdir: /root/
+      executable: /bin/bash
 ...
