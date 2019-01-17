@@ -92,8 +92,8 @@
 
   - name: "Create Minikube config directory symlink"
     file:
-      src: "/root/.kube/.minikube"
-      dest: "/root/.minikube"
+      src: "/root/.minikube"
+      dest: "/root/.kube/.minikube"
       state: link
 
   - name: "Start Minikube"
