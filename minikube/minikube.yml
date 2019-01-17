@@ -89,7 +89,7 @@
       - export MINIKUBE_WANTUPDATENOTIFICATION='false'
       - export MINIKUBE_WANTREPORTERRORPROMPT='false'
       - export CHANGE_MINIKUBE_NONE_USER='true'
-      - export MINIKUBE_HOME='/root/.minikube
+      - export MINIKUBE_HOME='/root/.minikube'
       - export KUBECONFIG='/root/.kube/config'
 
   - name: "Create Minikube config directory symlink"
