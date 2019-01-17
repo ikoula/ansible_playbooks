@@ -77,6 +77,8 @@
       state: "{{ item.state }}"
     with_items:
       - { path: '/root/.kube', state: 'directory' }    
+      - { path: '/root/.minikube', state: 'directory' }    
+      - { path: '/root/.kube/.minikube', state: 'directory' }    
       - { path: '/root/.kube/config', state: 'touch' }    
 
   - name: "Add env variables to root .bashrc"
@@ -92,9 +94,10 @@
 
   - name: "Create Minikube config directory symlink"
     file:
-      src: "/root/.kube/.minikube"
-      dest: "/root/.minikube"
+      src: "/root/.minikube"
+      dest: "/root/.kube/.minikube"
       state: link
+      force: yes
 
   - name: "Start Minikube"
     shell: minikube start --vm-driver=none
