@@ -91,11 +91,7 @@
       - export KUBECONFIG='$HOME/.kube/config'
 
   - name: "Start Minikube"
-    shell: "{{ item }}"
-    with_items:
-      - minikube start --vm-driver=none 
-      - minikube stop
-      - minikube delete
-      - rm -rf /etc/kubernetes
-      - minikube start --vm-driver=none
+    shell: minikube start --vm-driver=none
+    args:
+      chdir: /root/
 ...
