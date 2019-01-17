@@ -90,8 +90,14 @@
       - export MINIKUBE_HOME='$HOME/.minikube'
       - export KUBECONFIG='$HOME/.kube/config'
 
+  - name: "Create Minikube config directory symlink"
+    file:
+      src: "/root/.kube/.minikube"
+      dest: "/root/.minikube"
+      state: link
+
   - name: "Start Minikube"
-    shell: "MINIKUBE_HOME='/root/.minikube' && minikube start --vm-driver=none"
+    shell: minikube start --vm-driver=none
     args:
       chdir: /root/
       executable: /bin/bash
