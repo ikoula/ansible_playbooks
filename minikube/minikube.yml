@@ -87,7 +87,7 @@
       - export MINIKUBE_WANTUPDATENOTIFICATION='false'
       - export MINIKUBE_WANTREPORTERRORPROMPT='false'
       - export CHANGE_MINIKUBE_NONE_USER='true'
-      - export MINIKUBE_HOME='$HOME'
+      - export MINIKUBE_HOME='$HOME/.kube/.minikube'
       - export KUBECONFIG='$HOME/.kube/config'
 
   - name: "Start Minikube"
