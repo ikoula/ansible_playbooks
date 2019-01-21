@@ -1,0 +1,19 @@
+---
+- name: "MariaDB installation (with one DB and User)"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Install MariaDB packages"
+    apt: name=mariadb-server state=present update_cache=yes
+
+  - name: "Create MariaDB database"
+    mysql_db: name={{ MARIADB_USER_DB }} state=present
+
+  - name: "Create MariaDB user"
+    mysql_user: 
+      name={{ MARIADB_USER }} 
+      password={{ MARIADB_USER_PASS }} 
+      priv=*.*:ALL
+...
