@@ -6,7 +6,13 @@
   tasks:
 
   - name: "Install MariaDB packages"
-    apt: name=mariadb-server state=present update_cache=yes
+    apt: 
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - mariadb-server
+      - python-pip
 
   - name: "Install the MySQL-python module"
     pip: name=MySQL-python
