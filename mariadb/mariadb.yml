@@ -8,6 +8,9 @@
   - name: "Install MariaDB packages"
     apt: name=mariadb-server state=present update_cache=yes
 
+  - name: "Install the MySQL-python module"
+    pip: name=MySQL-python
+
   - name: "Create MariaDB database"
     mysql_db: name={{ MARIADB_USER_DB }} state=present
 
