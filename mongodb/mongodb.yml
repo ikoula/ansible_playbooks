@@ -1,0 +1,28 @@
+---
+- name: "MongoDB installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Install prerequies packages :"
+    apt: pkg={{ item }} update_cache=no state=present
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+      - python-pip
+
+  - name: "Add MongoDB repo"
+    apt_repository: repo='deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.1 main' state=present update_cache=no
+
+  - name: "Add APT key of Docker repo :"
+    apt_key: url='https://www.mongodb.org/static/pgp/server-4.1.asc' state=present
+
+  - name: "Install MongoDB packages :"
+    apt: pkg=mongodb-org update_cache=yes state=present
+
+  - name: "Start and enable docker unit"
+    service: name=mongod state=started enabled=yes
+...
