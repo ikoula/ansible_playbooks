@@ -15,5 +15,6 @@
     mysql_user: 
       name={{ MARIADB_USER }} 
       password={{ MARIADB_USER_PASS }} 
-      priv=*.*:ALL
+      state=present
+      priv='*.*:ALL'
 ...
