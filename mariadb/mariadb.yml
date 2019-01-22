@@ -12,10 +12,7 @@
       update_cache: yes
     with_items:
       - mariadb-server
-      - python-pip
-
-  - name: "Install the MySQL-python module"
-    pip: name=MySQL-python
+      - python-mysqldb
 
   - name: "Create MariaDB database"
     mysql_db: name={{ MARIADB_USER_DB }} state=present
