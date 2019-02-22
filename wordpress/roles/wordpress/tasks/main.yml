@@ -26,6 +26,6 @@
     regexp={{ item.regexp }}
     line={{ item.line }}
   with_items:
-    - {'regexp': "database_name_here", 'line': "{{wp_mysql_db}}"}
-    - {'regexp': "username_here", 'line': "{{wp_mysql_user}}"}
-    - {'regexp': "password_here", 'line': "{{wp_mysql_password}}"}
+    - {'regexp': "database_name_here", 'line': "define( 'DB_NAME', '{{wp_mysql_db}}');"}
+    - {'regexp': "username_here", 'line': "define( 'DB_USER', '{{wp_mysql_user}}');"}
+    - {'regexp': "password_here", 'line': "define( 'DB_PASSWORD', '{{wp_mysql_password}}');"}
