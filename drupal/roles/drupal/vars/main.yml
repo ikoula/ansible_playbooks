@@ -1,0 +1,4 @@
+---
+drupal_site_pass: "{{ DRUPAL_SITE_PASS }}"
+...
+

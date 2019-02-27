@@ -1,0 +1,66 @@
+---
+
+- name: "Delete drupal web directory if exists"
+  file:
+    path: /var/www/html/drupal
+    state: absent
+
+- name: "Create drupal web directory"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+  with_items:
+    - /var/www/html
+    - /var/www/html/drupal
+
+
+- name: "Install Drupal using composer"
+  composer:
+    command: create-project
+    arguments: drupal-composer/drupal-project:8.x-dev /var/www/html/drupal --stability dev --no-interaction
+    working_dir: /var/www/html/drupal
+    prefer_dist: yes
+  become: true
+  become_user: www-data
+
+- name: "Install Drupal dependencies"
+  composer:
+    command: require
+    arguments: drupal/devel:~1.0
+    working_dir: /var/www/html/drupal
+    prefer_dist: yes
+  become: true
+  become_user: www-data
+
+- name: "Install bootstrap module"
+  composer:
+    command: require
+    arguments: drupal/bootstrap
+    working_dir: /var/www/html/drupal
+    prefer_dist: yes
+  become: true
+  become_user: www-data
+
+- name: "Load Rewrite Apache2 module"
+  apache2_module:
+    name: rewrite 
+    state: present
+
+- name: "Update default Apache site"
+  become: yes
+  lineinfile:
+    dest=/etc/apache2/sites-enabled/000-default.conf
+    regexp="(.)+DocumentRoot /var/www/html"
+    line="DocumentRoot /var/www/html/drupal"
+  notify:
+    - restart apache
+
+- name: "Configure DB acces using Drush"
+  command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
+  args:
+    chdir: /var/www/html/drupal
+  ignore_errors: yes
+  notify:
+    - restart apache

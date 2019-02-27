@@ -1,0 +1,5 @@
+---
+drupal_mysql_db: drupal
+drupal_mysql_user: drupal
+drupal_mysql_pass: "{{ DRUPAL_MYSQL_PASS }}" 
+...

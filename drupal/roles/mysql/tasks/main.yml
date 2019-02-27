@@ -1,0 +1,11 @@
+---
+- name: "Create mysql database"
+  mysql_db: name={{ drupal_mysql_db }} state=present
+
+- name: "Create mysql user"
+  mysql_user: 
+    name={{ drupal_mysql_user }} 
+    password={{ drupal_mysql_pass }} 
+    priv={{ drupal_mysql_db }}.*:ALL
+    host=localhost
+...
