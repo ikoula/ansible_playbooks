@@ -21,4 +21,4 @@
     mode: 0755
 
 - name: "Run Composer installer"
-  command: php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  command: export COMPOSER_HOME="$HOME/.config/composer" && php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
