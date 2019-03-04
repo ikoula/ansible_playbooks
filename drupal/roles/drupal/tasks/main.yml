@@ -62,6 +62,8 @@
   command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --no-interaction  --debug --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
   args:
     chdir: /var/www/html/drupal
+  environment:
+    HOME: /var/www
   ignore_errors: yes
   notify:
     - restart apache
