@@ -23,6 +23,8 @@
   shell: cat /tmp/installer | php -- --install-dir=/usr/local/bin
   args:
     creates: /usr/local/bin/composer
+  ignore_errors: true
+  warn: false
 
 - name: "Replace composer.phar to composer"
   shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer
