@@ -14,19 +14,13 @@
     - php-curl
     - php-mbstring
     
-    
-- name: "Get composer installer"
+- name: "Get Composer installer"
   get_url:
     url: https://getcomposer.org/installer
-    dest: /tmp/installer.php
- 
-- name: "Install composer"
-  command: "{{ item }}"
-  with_items:
-    - php /tmp/installer.php
-    - mv composer.phar /usr/local/bin/composer
- 
-- name: "Delete composer installer file"
-  file:
-    path: /tmp/installer.php
-    state: absent
+    dest: /tmp/composer-setup.php
+    mode: 0755
+
+- name: Run Composer installer.
+  command: php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  environment:
+    COMPOSER_HOME: /root/.composer
