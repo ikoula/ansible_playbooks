@@ -12,6 +12,7 @@
     owner: www-data
     group: www-data
   with_items:
+    - /var/www
     - /var/www/html
     - /var/www/html/drupal
 
