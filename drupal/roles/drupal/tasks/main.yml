@@ -59,7 +59,7 @@
     - restart apache
 
 - name: "Configure DB acces using Drush"
-  command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
+  command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --no-interaction  --debug --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
   args:
     chdir: /var/www/html/drupal
   ignore_errors: yes
