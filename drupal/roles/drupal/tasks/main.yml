@@ -50,16 +50,18 @@
     state: present
 
 - name: "Update default Apache site"
-  become: yes
-  lineinfile:
-    dest=/etc/apache2/sites-enabled/000-default.conf
-    regexp="(.)+DocumentRoot /var/www/html"
-    line="DocumentRoot /var/www/html/drupal"
-  notify:
-    - restart apache
+  copy:
+    src: /tmp/ansible/drupal/roles/drupal/files/drupal.conf
+    dest: /etc/apache2/sites-available/drupal.conf
+
+- name: "Enabled Drupal site"
+  shell: "{{ item }}"
+  with_items:
+    - rm -f /etc/apache2/sites-enabled/000-default.conf
+    - ln -s /etc/apache2/sites-available/drupal.conf /etc/apache2/sites-enabled/drupal.conf
 
 - name: "Configure DB acces using Drush"
-  command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --no-interaction  --debug --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
+  command: "/var/www/html/drupal/vendor/bin/drush site-install standard -y --db-url=mysql://{{drupal_mysql_user}}:{{drupal_mysql_pass}}@localhost:3306/{{drupal_mysql_db}} --no-interaction  --root=/var/www/html/drupal/web --account-name=admin --account-pass={{ drupal_site_pass }} --site-name=Drupal"
   args:
     chdir: /var/www/html/drupal
   environment:
