@@ -1,0 +1,64 @@
+---
+- hosts: all
+  user: root
+  gather_facts: false
+  
+  tasks:
+
+  - name: "Install prerequisite packages"
+    apt:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - apt-transport-https
+      - dirmngr
+      - gnupg
+      - ca-certificates
+      - python-mysqldb
+
+  - name: "Install GPG key for APT repo"
+    apt_key:
+      #url: "hkp://keyserver.ubuntu.com:80"
+      keyserver: keyserver.ubuntu.com
+      id: "{{ item }}"
+      state: present
+    with_items:
+      - 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+      - CB2DE8E5
+
+  - name: "Add Mono and OnlyOffice APT repo"
+    apt_repository:
+      repo: "{{ item.urlrepo }}"
+      filename: "{{ item.filenamerepo }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - {'urlrepo': "deb https://download.mono-project.com/repo/debian stable-stretch main", 'filenamerepo': "mono"}
+      - {'urlrepo': "deb http://download.onlyoffice.com/repo/debian squeeze main", 'filenamerepo': "onlyoffice"}
+
+  - name: "Get Node.js setup script"
+    get_url:
+      url: https://deb.nodesource.com/setup_11.x
+      dest: /tmp/setup_11.x
+      validate_certs: no
+      mode: "0750"
+
+  - name: "Execute Node.js setup script"
+    shell: /tmp/setup_11.x
+  
+  - name: "Set MySQL root password before installing"
+    debconf: name='mysql-server' question='mysql-server/root_password' value='{{mysql_root_password | quote}}' vtype='password'
+
+  - name: "Confirm MySQL root password before installing"
+    debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{mysql_root_password | quote}}' vtype='password'  
+
+  - name: "Install Node.js, Mono and OnlyOffice community server packages"
+    apt:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - nodejs
+      - mono-complete
+      - onlyoffice-communityserver
+
+...
