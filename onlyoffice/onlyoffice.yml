@@ -47,10 +47,18 @@
     shell: /tmp/setup_11.x
   
   - name: "Set MySQL root password before installing"
-    debconf: name='mysql-server' question='mysql-server/root_password' value='{{mysql_root_password | quote}}' vtype='password'
+    debconf: 
+      name: "mysql-server"
+      question: "mysql-server/root_password"
+      value: "{{ mysql_root_password }}"
+      vtype: "password"
 
   - name: "Confirm MySQL root password before installing"
-    debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{mysql_root_password | quote}}' vtype='password'  
+    debconf:
+      name: "mysql-server"
+      question: "mysql-server/root_password_again"
+      value: "{{ mysql_root_password }}"
+      vtype: "password"
 
   - name: "Install Node.js, Mono and OnlyOffice community server packages"
     apt:
