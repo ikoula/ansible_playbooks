@@ -1,0 +1,33 @@
+---
+- name: "Install NginX"
+  apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - nginx
+
+- name: "Enable and start Nginx service"
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: "Create Prestashop nginx vhost"
+  copy:
+    src: /tmp/ansible/prestashop/roles/nginx/files/prestashop.conf
+    dest: /etc/nginx/sites-available/prestashop.conf
+
+- name: "Disabled default nginx vhost"
+  file: 
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: "Enabled Prestashop nginx vhost"
+  file:
+    src: /etc/nginx/sites-available/prestashop.conf
+    dest: /etc/nginx/sites-enabled/prestashop.conf
+    state: link
+  notify:
+    - restart nginx
+

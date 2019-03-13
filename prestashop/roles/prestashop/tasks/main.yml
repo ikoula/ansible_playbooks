@@ -1,0 +1,48 @@
+---
+
+- name: "Download and extract Prestashop 1.7.5.1 archive"
+  unarchive:
+    src: 'https://download.prestashop.com/download/releases/prestashop_1.7.5.1.zip'
+    dest: '/opt'
+    remote_src: true
+    validate_certs: no
+
+- name: "Create prestashop nginx directory"
+  file:
+    path: /var/www/html/prestashop
+    state: directory 
+
+- name: "Extract prestashop.zip content in nginx documentroot directory"
+  unarchive:
+    src: /opt/prestashop.zip
+    dest: /var/www/html/prestashop
+    copy: no
+
+- name: "Change owner/group of prestashop nginx directory"
+  file:
+    path: /var/www/html/prestashop
+    owner: www-data
+    group: www-data
+    recurse: true
+
+- name: "Get Ip address of eth0"
+  shell: curl -s ifconfig.co
+  register: eth0_ipaddress
+
+
+- name: "Install prestashop with Php Cli"
+  shell: '/usr/bin/php7.0 /var/www/html/prestashop/install/index_cli.php --name=prestashop --language=fr --domain="{{ eth0_ipaddress.stdout }}" --db_server=localhost --db_name=prestashop --db_user=prestashop --db_password="{{ ps_mysql_password }}" --firstname=admin --lastname=admin --email="{{ ps_admin_email }}" --password="{{ ps_admin_password }}" --send_email'
+
+- name: "Adapt owner of var/cache/dev/ prestashop directory"
+  file:
+    path: /var/www/html/prestashop/var/cache
+    owner: www-data
+    group: www-data
+    recurse: true
+
+- name: "Delete install directory"
+  file:
+    path: /var/www/html/prestashop/install
+    state: absent
+
+...
