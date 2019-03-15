@@ -1,0 +1,10 @@
+---
+- name: "Deploy Kubernetes master and/or worker node(s)"
+  hosts: all
+  user: root
+  gather_facts: yes
+  
+  roles:
+    - { role: master, tags: ["master"] } 
+    - { role: worker, tags: ["worker"] } 
+...

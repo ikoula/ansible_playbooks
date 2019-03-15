@@ -1,0 +1,94 @@
+---
+
+- name: "Install prerequisite packages"
+  apt: pkg={{ item }} update_cache=no state=present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    - python-pip
+
+- name: "Remove swap from /etc/fstab"
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- name: "Disable swap"
+  command: swapoff -a
+
+- name: "Add Docker and Google Cloud/K8s repo"
+  apt_repository: 
+    repo: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items:
+    - 'deb https://download.docker.com/linux/debian stretch stable'
+    - 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
+
+- name: "Add APT key for Docker and Google Cloud repositories :"
+  apt_key: 
+    url: "{{ item }}"
+    state: present
+  with_items:
+    - 'https://download.docker.com/linux/debian/gpg'
+    - 'https://packages.cloud.google.com/apt/doc/apt-key.gpg'
+
+- name: "Install Docker 18.06/lastet validated version for Kubernetes kubeadm"
+  apt:
+    pkg: docker-ce=18.06.1~ce~3-0~debian
+    update_cache: yes
+    state: present
+
+- name: "Install Kubernetes master components packages"
+  apt: pkg={{ item }} update_cache=yes state=present
+  with_items:
+    - kubeadm
+    - kubelet
+    - kubectl
+
+- name: "Configure kubelet default cgroup driver"
+  lineinfile:
+    dest: /etc/default/kubelet
+    regexp: "KUBELET_EXTRA_ARGS="
+    line: "KUBELET_EXTRA_ARGS=--cgroup-driver=cgroupfs"
+  
+- name: "Enable and start Docker service"
+  service: name=docker state=started enabled=yes
+
+- name: "Enable and start Kubelet service"
+  service: name=kubelet state=started enabled=yes
+
+- name: "Get Ip address of eth0"
+  shell: curl -s ifconfig.co
+  register: eth0_ipaddress
+
+- name: "Add line in /etc/hosts to resolve hostname"
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ eth0_ipaddress.stdout }} {{ ansible_hostname }}"
+
+- name: "Test gcr.io registry connectivity before initialize master"
+  shell: /usr/bin/kubeadm config images pull
+
+- name: "Initialize the Master using Flannel add-on for pod network"
+  shell: '/usr/bin/kubeadm init --pod-network-cidr=10.244.0.0/16'
+  
+- name: "Create Kubernetes config directories"
+  file:
+    path: /root/.kube
+    state: directory
+
+- name: "Copy kubernetes config file in .kube user directory"
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: yes
+
+- name: "Install Flannel pod network add-on"
+  shell: '/usr/bin/kubectl apply -f https://raw.githubusercontent.com/ikoula/ansible_playbooks/master/kubernetes/roles/master/files/kube-flannel.yml'
+
+
+...
