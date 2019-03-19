@@ -88,7 +88,7 @@
     remote_src: yes
 
 - name: "Install Flannel pod network add-on"
-  shell: '/usr/bin/kubectl apply -f https://raw.githubusercontent.com/ikoula/ansible_playbooks/master/kubernetes/roles/master/files/kube-flannel.yml'
+  shell: '/usr/bin/kubectl apply -f /tmp/ansible/kubernetes/roles/master/files/kube-flannel.yml'
 
 
 ...
