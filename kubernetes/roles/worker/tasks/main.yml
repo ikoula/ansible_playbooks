@@ -75,12 +75,6 @@
     path: /root/.kube
     state: directory
 
-- name: "Copy kubernetes config file in .kube user directory"
-  copy:
-    src: /etc/kubernetes/admin.conf
-    dest: /root/.kube/config
-    remote_src: yes
-
 - name: "Join this worker to cluster"
   shell: '/usr/bin/kubeadm join {{ k8s_master_ipaddress }}:6443 --token {{ k8s_cluster_token }} --discovery-token-unsafe-skip-ca-verification'
   args:
