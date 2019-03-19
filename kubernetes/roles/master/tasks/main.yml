@@ -87,12 +87,8 @@
     dest: /root/.kube/config
     remote_src: yes
 
-- name: "Wait for 30s until the Master components are initilized before apply pod network"
-  pause:
-    seconds: 30
-
 - name: "Install Flannel pod network add-on"
-  shell: '/usr/bin/kubectl apply -f /tmp/ansible/kubernetes/roles/master/files/kube-flannel.yml'
+  shell: '/usr/bin/kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml'
 
 
 ...
