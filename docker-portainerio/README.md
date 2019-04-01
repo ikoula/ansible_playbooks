@@ -1,7 +1,7 @@
 Docker Portainer.io
 =========
 
-Playbook to install Docker with a Portainer.io container for ease of administration
+Playbook to install Docker with a Portainer.io container for ease of administration on Debian9
 
 Use "admin_password" variable to define the password of portainer admin user (replace "YourPassword" by the password of your choice):
 

@@ -1,7 +1,7 @@
 Drupal 8
 =========
 
-Playbook to deploy Drupal 8 CMS in LAMP (Linux Apach2 MySQL Php) environment in Debian9
+Playbook to deploy Drupal 8 CMS in LAMP (Linux Apache2 MySQL Php) environment on Debian9
 
 Use "DRUPAL_MYSQL_PASS" variable to define the password of drupal mysql user and "DRUPAL_SITE_PASS" variable to define the password of admin Drupal site account.
 

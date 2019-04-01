@@ -1,7 +1,7 @@
 Kubernetes
 ==========
 
-Playbook to deploy Kubernetes master and/or worker node(s)
+Playbook to deploy Kubernetes master and/or worker node(s) using kubeadm on Debian9
 
 # To deploy Kubernetes Master node :
 

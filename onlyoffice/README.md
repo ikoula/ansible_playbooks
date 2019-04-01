@@ -1,7 +1,7 @@
 OnlyOffice Community Server
 ===========================
 
-Playbook to deploy OnlyOffice Community Server with Nginx, MySQL and Mono.
+Playbook to deploy OnlyOffice Community Server with Nginx, MySQL and Mono on Debian9.
 
 Edit the host inventory file with your server informations and execute the playbook like below (specify the mysql root password of your choice in the "mysql_root_password" variable) :
 
