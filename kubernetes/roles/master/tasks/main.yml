@@ -76,7 +76,7 @@
   shell: /usr/bin/kubeadm config images pull
 
 - name: "Initialize the Master using Flannel add-on for pod network"
-  shell: '/usr/bin/kubeadm init --pod-network-cidr=10.244.0.0/16'
+  shell: '/usr/bin/kubeadm init --pod-network-cidr=10.244.0.0/16 --token={{ k8s_cluster_token }}'
   
 - name: "Create Kubernetes config directories"
   file:
