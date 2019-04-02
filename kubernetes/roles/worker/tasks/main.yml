@@ -51,6 +51,8 @@
 
 - name: "Configure kubelet default cgroup driver"
   lineinfile:
+    create: yes
+    state: present
     dest: /etc/default/kubelet
     regexp: "KUBELET_EXTRA_ARGS="
     line: "KUBELET_EXTRA_ARGS=--cgroup-driver=cgroupfs"
