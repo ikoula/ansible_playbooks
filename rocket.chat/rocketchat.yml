@@ -1,0 +1,110 @@
+---
+- name: "Installation Rocket.Chat"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Install necessary dependancy packages :"
+    apt: pkg={{ item }} update_cache=no state=present
+    with_items:
+      - apt-transport-https
+      - curl
+      - dirmngr
+
+  - name: "Install GPG key for APT repo"
+    apt_key:
+      #url: "hkp://keyserver.ubuntu.com:80"
+      keyserver: keyserver.ubuntu.com
+      id: "2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5"
+      state: present
+
+
+  - name: "Add MongoDB APT repo"
+    apt_repository:
+      repo: 'deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.6 main'
+      update_cache: no
+      state: present
+
+  - name: "Get Node.js setup script"
+    get_url:
+      url: https://deb.nodesource.com/setup_8.x
+      dest: /tmp/setup_8.x
+      validate_certs: no
+      mode: "0750"
+
+  - name: "Execute Node.js setup script"
+    shell: /tmp/setup_8.x
+
+  - name: "Install build tools, MongoDB, nodejs and graphicsmagick"
+    apt: pkg={{ item }} update_cache=no state=present
+    with_items:
+      - build-essential
+      - mongodb-org
+      - nodejs
+      - graphicsmagick
+
+  - name: "NPM install inherits and n and the node version require by Rocket.Chat"
+    npm:
+      name: "{{ item }}"
+      global: yes
+    with_items:
+      - inherits
+      - n
+
+  - shell: n 8.11.3
+
+  - name: "Download Rocket.Chat latest version"
+    get_url:
+      url: https://releases.rocket.chat/latest/download
+      dest: /opt/rocket.chat.tgz
+      validate_certs: no
+      mode: "0750"
+
+  - name: "Extract Rocket.Chat" 
+    unarchive: src=/opt/rocket.chat.tgz dest=/opt/ copy=no
+
+  - name: "Install Rocket.Chat"
+    shell: 'npm install'
+    args:
+      executable: /bin/bash
+      chdir: /opt/bundle/programs/server
+
+  - name: "Rename bundle to Rocket.Chat in /opt directory"
+    shell: mv /opt/bundle /opt/Rocket.Chat
+
+  - name: "Create rocketchat user"
+    user:
+      name: rocketchat
+      create_home: no
+      password_lock: yes
+
+  - name: "Chown RocketChat directory"
+    file:
+      path: /opt/Rocket.Chat
+      owner: rocketchat
+      group : rocketchat
+
+  - name: "Copy rocketchat systemD config file"
+    copy:
+      source: /tmp/ansible/rocketchat/files/rocketchat.service
+      dest: /lib/systemd/system/rocketchat.service
+
+  - name: "Get Ip address of eth0"
+    shell: curl -s ifconfig.co
+    register: eth0_ipaddress
+
+  - name: "Add line in /etc/hosts to resolve hostname"
+    replace:
+      path: /lib/systemd/system/rocketchat.service
+      regexp: vm_ipaddress_here
+      replace: "{{ eth0_ipaddress.stdout }}"
+
+  - name: "Enable and Start MondDB and Rocket.Chat services"
+    service:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    with_items:
+      - mongod
+      - rocketchat
+
