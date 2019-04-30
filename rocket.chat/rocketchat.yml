@@ -85,7 +85,7 @@
 
   - name: "Copy rocketchat systemD config file"
     copy:
-      src: /tmp/ansible/rocketchat/files/rocketchat.service
+      src: /tmp/ansible/rocket.chat/files/rocketchat.service
       dest: /lib/systemd/system/rocketchat.service
 
   - name: "Get Ip address of eth0"
