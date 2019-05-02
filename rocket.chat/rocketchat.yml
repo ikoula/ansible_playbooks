@@ -83,6 +83,11 @@
       owner: rocketchat
       group : rocketchat
 
+  - name: "Delete rocket.chat.tgz archive"
+    file :
+      path: /opt/rocket.chat.tgz
+      state: absent
+
   - name: "Copy rocketchat systemD config file"
     copy:
       src: /tmp/ansible/rocket.chat/files/rocketchat.service
@@ -105,9 +110,14 @@
       regexp: vm_ipaddress_here
       replace: "{{ eth0_ipaddress.stdout }}"
 
+  - name: "Wait for MongoDB to be listening"
+    wait_for:
+      port: 27017
+      delay: 10
+      
   - name: "Initiate the replica set"
-    shell: mongo --eval "rs.initiate()"
-
+    shell: && mongo --eval "rs.initiate()"
+    
   - name: "Enable and Start MondDB and Rocket.Chat services"
     service:
       name: "{{ item }}"
