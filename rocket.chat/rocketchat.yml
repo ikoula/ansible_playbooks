@@ -116,7 +116,7 @@
       delay: 10
       
   - name: "Initiate the replica set"
-    shell: && mongo --eval "rs.initiate()"
+    shell: mongo --eval "rs.initiate()"
     
   - name: "Enable and Start MondDB and Rocket.Chat services"
     service:
