@@ -124,8 +124,13 @@
       state: restarted
       enabled: yes
 
+  - name: "Wait for MongoDB to be listening"
+    wait_for:
+      port: 27017
+      delay: 10
+
   - name: "Enable and Start Rocket.Chat service after MongoDB has been restarted"
     service:
       name: "rocketchat"
-      state: started
+      state: restarted
       enabled: yes
