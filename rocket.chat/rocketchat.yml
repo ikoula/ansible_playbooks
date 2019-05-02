@@ -87,6 +87,13 @@
     copy:
       src: /tmp/ansible/rocket.chat/files/rocketchat.service
       dest: /lib/systemd/system/rocketchat.service
+  
+  - name: "Copy MongoDB config file with replica set"
+    copy:
+      src: /tmp/ansible/rocket.chat/files/mongod.conf
+      dest: /etc/mongod.conf
+
+  - service: name=mongod state=restarted
 
   - name: "Get Ip address of eth0"
     shell: curl -s ifconfig.co
@@ -97,6 +104,9 @@
       path: /lib/systemd/system/rocketchat.service
       regexp: vm_ipaddress_here
       replace: "{{ eth0_ipaddress.stdout }}"
+
+  - name: "Initiate the replica set"
+    shell: mongo --eval "rs.initiate()"
 
   - name: "Enable and Start MondDB and Rocket.Chat services"
     service:
