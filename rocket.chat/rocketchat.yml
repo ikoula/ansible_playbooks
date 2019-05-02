@@ -118,12 +118,14 @@
   - name: "Initiate the replica set"
     shell: mongo --eval "rs.initiate()"
     
-  - name: "Enable and Start MondDB and Rocket.Chat services"
+  - name: "Enable and Start MondDB service"
     service:
-      name: "{{ item }}"
+      name: "mongod"
       state: restarted
       enabled: yes
-    with_items:
-      - mongod
-      - rocketchat
 
+  - name: "Enable and Start Rocket.Chat service after MongoDB has been restarted"
+    service:
+      name: "rocketchat"
+      state: started
+      enabled: yes
