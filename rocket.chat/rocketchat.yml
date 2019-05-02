@@ -121,7 +121,7 @@
   - name: "Enable and Start MondDB and Rocket.Chat services"
     service:
       name: "{{ item }}"
-      state: started
+      state: restarted
       enabled: yes
     with_items:
       - mongod
