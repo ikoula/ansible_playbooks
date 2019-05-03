@@ -30,12 +30,13 @@
     pip:
       name: pymongo
 
-  - name: "Create a database user"
+  - name: "Create the initial DBA user"
     mongodb_user:
-      database: "{{ mongodb_dbname }}"
+      database: "admin"
       name: "{{ mongodb_user }}"
       password: "{{ mongodb_pass }}"
-      roles: readWrite,dbAdmin,userAdmin
+      roles: userAdminAnyDatabase
+      login_port: 27017
       state: present
 
 ...
