@@ -1,0 +1,42 @@
+---
+- name: "Installation GitLab"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Install necessary dependancies :"
+    apt: pkg={{ item }} update_cache=yes state=present
+    with_items:
+      - curl
+      - openssh-server
+      - ca-certificates
+      - postfix
+      - apt-transport-https
+      - debian-archive-keyring
+      - dirmngr
+
+  - name: "Add GitLab gpg key repository :"
+    apt_key:
+      url: "https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey"
+      state: present
+
+  - name: "Add GitLab sources repo"
+    apt_repository:
+      repo: "deb https://packages.gitlab.com/gitlab/gitlab-ce/debian/ stretch main"
+      state: present
+      update_cache: no
+
+  - name: "Get Ip address of eth0"
+    shell: curl -s ifconfig.co
+    register: eth0_ipaddress
+
+  - name: "Configure GitLab External url"
+    lineinfile:
+      dest: /etc/gitlab/gitlab.rb
+      line: 'external_url "http://{{ eth0_ipaddress.stdout }}"'
+      create: yes
+
+  - name: "Install GitLab :"
+    apt: pkg=gitlab-ce update_cache=yes state=present
+
+...
