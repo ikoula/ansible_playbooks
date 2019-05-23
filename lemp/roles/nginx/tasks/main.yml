@@ -1,8 +1,6 @@
 ---
 - name: "Install NginX"
-  apt: name={{ item }} state=present update_cache=yes
-  with_items:
-    - nginx
+  apt: name=nginx state=present update_cache=yes
 
 - name: "Enable and start Nginx service"
   service:
