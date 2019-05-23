@@ -1,0 +1,26 @@
+---
+- name: "Install PHP packages"
+  apt: 
+    update_cache: yes
+    name: "{{ item }}" 
+    state: present
+  with_items:
+    - php-cli
+    - php-common
+    - php-fpm
+    - php-curl
+    - php-zip
+    - php-gd
+    - php-mysql
+    - php-xml
+    - php-mcrypt
+    - php-mbstring
+    - php-intl
+
+- name: "Enable and start PHP-FPM service"
+  service:
+    name: php7.0-fpm
+    state: restarted
+    enabled: yes
+
+...

@@ -1,0 +1,20 @@
+---
+- name: "Install MariaDB packages"
+  apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+
+- name: "Create MariaDB database"
+  mysql_db: name={{ MARIADB_USER_DB }} state=present
+
+- name: "Create MariaDB user"
+  mysql_user: 
+    name={{ MARIADB_USER }} 
+    password={{ MARIADB_USER_PASS }} 
+    state=present
+    priv='*.*:ALL'
+...

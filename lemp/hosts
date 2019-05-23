@@ -1,0 +1,1 @@
+<public ip address of your CIO instance> ansible_ssh_private_key_file=<path to your CIO instance ssh private key>
