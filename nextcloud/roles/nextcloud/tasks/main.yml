@@ -1,7 +1,7 @@
 ---
 - name: "Download and extract the latest NextCloud archive"
   unarchive:
-    src: 'https://download.nextcloud.com/server/releases/latest.zip'
+    src: 'https://download.nextcloud.com/server/releases/latest-15.zip'
     remote_src: true
     dest: '/var/www/'
     validate_certs: no
