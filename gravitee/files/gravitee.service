@@ -1,0 +1,25 @@
+[Unit]
+Description=Gravitee API gateway Daemon
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=root
+Group=root
+
+PIDFile=/var/run/gio.pid
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=gravitee
+
+ExecStart=/bin/sh /usr/local/bin/graviteeio-full-1.26.0/graviteeio-gateway-1.26.0/bin/gravitee -d -p=/var/run/gio.pid
+
+Restart=on-failure
+
+# Configures the time to wait before service is stopped forcefully.
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target

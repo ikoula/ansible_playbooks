@@ -1,0 +1,56 @@
+---
+- name: "Gravitee API gateway installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Installation of required packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - default-jdk
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+      - python-pip
+
+  - name: "Add the MongoDB repo key for APT"
+    apt_key: url=https://www.mongodb.org/static/pgp/server-3.8.asc
+
+  - name: "Add the APT MongoDB repo"
+    apt_repository: repo='deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/3.7 main' update_cache=yes state=present
+
+  - name: "Installation of MongoDB"
+    apt: name=mongodb update_cache=yes state=present
+
+  - name: "Download and extract Gravitee API 1.26.0 archive"
+    unarchive:
+      src: 'https://download.gravitee.io/graviteeio-apim/distributions/graviteeio-full-1.26.0.zip'
+      dest: '/usr/local/bin/'
+      remote_src: true
+      validate_certs: no
+
+  - name: "Add the Elasticsearch repo key for APT"
+    apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+  - name: "Add the APT Elasticsearch repo"
+    apt_repository: repo='deb https://artifacts.elastic.co/packages/5.x/apt stable main' update_cache=yes state=present
+  
+  - name: "Installation of ElasticSearch"
+    apt: name=elasticsearch update_cache=yes state=present
+
+  - file: path="/var/log/gravitee.log" state=touch
+
+  - name: "Copy Gravitee API gateway systemD unit file"
+    copy:
+      src: /tmp/ansible/gravitee/files/gravitee.service
+      dest: /lib/systemd/system/gravitee.service
+
+  - name: "Enable and Start Gravitee API gateway service"
+    service:
+      name: "gravitee"
+      state: started
+      enabled: yes
+...
