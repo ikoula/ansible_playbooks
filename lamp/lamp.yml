@@ -19,11 +19,11 @@
       - python-mysqldb
 
   - name: "Create mysql database"
-    mysql_db: name={{ wp_mysql_db }} state=present
+    mysql_db: name={{ MYSQL_USER_DB }} state=present
 
   - name: "Create mysql user"
     mysql_user: 
-      name={{ wp_mysql_user }} 
-      password={{ wp_mysql_password }} 
+      name={{ MYSQL_USER }} 
+      password={{ MYSQL_USER_PASS }} 
       priv=*.*:ALL
 ...
