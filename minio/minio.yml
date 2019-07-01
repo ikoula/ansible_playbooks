@@ -51,8 +51,8 @@
       - MINIO_VOLUMES="/mnt/nas"
 
   - name: "Copy MinIO systemD unit file"
-    copy:
-      src: /tmp/ansible/minio/files/minio.service
+    template:
+      src: /tmp/ansible/minio/files/minio.service.j2
       dest: /lib/systemd/system/minio.service
 
   - name: "Enable and Start MinIO service"
