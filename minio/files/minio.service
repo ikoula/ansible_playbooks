@@ -1,0 +1,22 @@
+[Unit]
+Description=MinIO
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=root
+Group=root
+
+PIDFile=/var/run/minio.pid
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=minio
+
+ExecStart=/usr/local/bin/minio server /mnt/nas
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

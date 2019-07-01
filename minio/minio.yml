@@ -1,0 +1,65 @@
+---
+- name: "Minio installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Getting dependencies"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - curl 
+      - nfs-common
+        #      - net-utils
+      - net-tools
+      - dnsutils
+      - samba
+      - smbclient
+
+  - name: "Download Minio binary"
+    get_url:
+      url: https://dl.minio.io/server/minio/release/linux-amd64/minio
+      dest: /usr/local/bin
+      mode: "0750"
+      validate_certs: no
+
+  - name: "Create Minio group"
+    group:
+      name: minio
+      state: present
+
+  - name: "Create a minio user for minio service"
+    user:
+      name: minio
+      group: minio
+      comment: "MinIO user"
+      create_home: no
+      password_lock: yes
+
+  - name: "Assign minio binary to minio user"
+    file:
+      path: /usr/local/bin/minio
+      owner: minio
+      group: minio 
+
+  - name: "Add Minio environment variables in /etc/default/minio file"
+    lineinfile:
+      dest: /etc/default/minio
+      create: yes
+      line: "{{ item }}"
+    with_items:
+      - MINIO_VOLUMES="/mnt/nas"
+
+  - name: "Copy MinIO systemD unit file"
+    copy:
+      src: /tmp/ansible/minio/files/minio.service
+      dest: /lib/systemd/system/minio.service
+
+  - name: "Enable and Start MinIO service"
+    service:
+      name: "minio"
+      state: started
+      enabled: yes
+
+
+...
