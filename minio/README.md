@@ -7,7 +7,7 @@ MinIO mountpoint on which you need to mount your nfs/smb or other share : /mnt/n
 
 ansible-playbook -i hosts minio.yml
 
-Url to access to your MinIO UI : http://\<ip address of your server\>
+Url to access to your MinIO UI : http://\<ip address of your server\>:9000
 
 License
 -------
