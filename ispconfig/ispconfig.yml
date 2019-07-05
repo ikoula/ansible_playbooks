@@ -1,0 +1,147 @@
+---
+- name: "ISPConfig3 installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Unattended installation of postfix"
+    debconf:
+      name: postfix
+      question: postfix/main_mailer_type
+      value: 'Internet Site'
+      vtype: string
+
+
+  - name: "Installation of the many prerequisite packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - postfix
+      - postfix-doc
+      - postfix-mysql
+      - postgrey
+      - mariadb-client
+      - mariadb-server
+      - openssl
+      - getmail4
+      - rkhunter
+      - binutils
+      - dovecot-imapd
+      - dovecot-pop3d
+      - dovecot-mysql
+      - dovecot-sieve
+      - dovecot-lmtpd
+      - spamassassin
+      - clamav
+      - clamav-daemon
+      - clamav-docs
+      - zoo
+      - unzip
+      - bzip2
+      - arj
+      - nomarch
+      - lzop
+      - cabextract
+      - apt-listchanges
+      - libnet-ldap-perl
+      - libauthen-sasl-perl
+      - libio-string-perl
+      - libio-socket-ssl-perl
+      - libnet-ident-perl
+      - zip
+      - libnet-dns-perl
+      - libdbd-mysql-perl
+      - pure-ftpd-common
+      - pure-ftpd-mysql
+      - quota
+      - quotatool
+      - bind9
+      - dnsutils
+      - fail2ban
+      - patch
+      - apache2
+      - apache2-doc
+      - apache2-utils
+      - libapache2-mod-php
+      - php7.0
+      - php7.0-common
+      - php7.0-gd
+      - php7.0-mysql
+      - php7.0-imap
+      - phpmyadmin
+      - php7.0-cli
+      - php7.0-cgi
+      - libapache2-mod-fcgid
+      - apache2-suexec-pristine
+      - php-pear
+      - php7.0-mcrypt
+      - mcrypt
+      - imagemagick
+      - libruby
+      - libapache2-mod-python
+      - php7.0-curl
+      - php7.0-intl
+      - php7.0-pspell
+      - php7.0-recode
+      - php7.0-sqlite3
+      - php7.0-tidy
+      - php7.0-xmlrpc
+      - php7.0-xsl
+      - memcached
+      - php-memcache
+      - php-imagick
+      - php-gettext
+      - php7.0-zip
+      - php7.0-mbstring
+      - memcached
+      - libapache2-mod-passenger
+      - php7.0-soap
+
+  - name: "Stop and Disable SpamAssassin service"
+    service:
+      name: "spamassassin"
+      state: stopped
+      enabled: no
+
+  - name: "Enable some Apache2 modules"
+    apache2_module:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - suexec
+      - rewrite
+      - ssl
+      - actions
+      - include
+      - auth_digest
+      - cgi
+      - headers
+
+  - name: "Enable virtual chroot"
+    lineinfile:
+      dest: /etc/default/pure-ftpd-common
+      regexp: ^VIRTUAL
+      line: 'VIRTUALCHROOT=true'   
+
+  - name: "Restart PureFTP service"
+    service:
+      name: "pure-ftpd-mysql"
+      state: restarted
+      enabled: yes
+
+  - name: "Download and unpack ISPconfig3"
+    unarchive:
+      src: http://www.ispconfig.org/downloads/ISPConfig-3-stable.tar.gz
+      dest: "/tmp/"
+      remote_src: yes
+
+  - name: "Prepare autoinstall.ini installation files"
+    template:
+      src: "/home/lhulot/ansible/appli_cs/ispconfig/files/autoinstall.ini.j2"
+      dest: /tmp/autoinstall.ini
+
+  - name: "Start ISPConfig Installation"
+    command: "php -q install.php --autoinstall=/tmp/autoinstall.ini"
+    args:
+      chdir: /tmp/ispconfig3_install/install
+...

@@ -1,0 +1,51 @@
+[install]
+language=en
+install_mode=expert
+hostname={{ inventory_hostname }}
+mysql_hostname=localhost
+mysql_root_user=root
+mysql_root_password={{ mysql_root_password }}
+mysql_database=dbispconfig
+mysql_port=3306
+mysql_charset=utf8
+http_server=apache
+ispconfig_port=8080
+ispconfig_use_ssl=y
+ispconfig_admin_password={{ ispconfig_admin_password }}
+
+[ssl_cert]
+ssl_cert_country=FR
+ssl_cert_state=France
+ssl_cert_locality=localhost
+ssl_cert_organisation=CIO
+ssl_cert_organisation_unit="CIO One App
+ssl_cert_common_name={{ inventory_hostname }}
+
+[expert]
+mysql_ispconfig_user=root
+mysql_ispconfig_password={{ mysql_root_password }}
+join_multiserver_setup=n
+mysql_master_hostname=localhost
+mysql_master_root_password={{ mysql_root_password }}
+configure_mail=y
+configure_jailkit=y
+configure_ftp=y
+configure_dns=y
+configure_nginx=n
+configure_apache=y
+configure_firewall=y
+configure_webserver=y
+install_ispconfig_web_interface=y
+
+[update]
+do_backup=yes
+mysql_root_password={{ mysql_root_password }}
+mysql_master_hostname=localhost
+mysql_master_root_user=root
+mysql_master_root_password={{ mysql_root_password }}
+mysql_master_database=dbipsconfig
+reconfigure_permissions_in_master_database=n
+reconfigure_services=yes
+ispconfig_port=8080
+create_new_ispconfig_ssl_cert=no
+reconfigure_crontab=yes
