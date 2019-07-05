@@ -137,7 +137,8 @@
 
   - name: "Prepare autoinstall.ini installation files"
     template:
-      src: "/home/lhulot/ansible/appli_cs/ispconfig/files/autoinstall.ini.j2"
+      src: "
+      group: /tmp/ansible/ispconfig/files/autoinstall.ini.j2"
       dest: /tmp/autoinstall.ini
 
   - name: "Start ISPConfig Installation"
