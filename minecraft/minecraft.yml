@@ -23,7 +23,7 @@
 
   - name: "Getting server Jar"
     get_url:
-      url: https://papermc.io/ci/job/Paper/lastSuccessfulBuild/artifact/paperclip.jar
+      url: https://papermc.io/ci/job/Paper-{{ paperclip_version }}/lastSuccessfulBuild/artifact/paperclip.jar
       dest: /opt/papermc/papermc_server.jar
       validate_certs: no
       mode: "0750"
