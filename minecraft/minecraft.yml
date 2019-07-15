@@ -25,6 +25,7 @@
   - name: "Chown PaperMc directory"
     file:
       path: /opt/papermc
+      state: directory
       owner: minecraft
       group : minecraft
 
