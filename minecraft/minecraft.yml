@@ -16,11 +16,10 @@
       - software-properties-common
       - tmux
 
-  - name: "Create minecraft user"
-    user:
-      name: minecraft
-      create_home: no
-      password_lock: yes
+  - name: "Create PaperMc directory"
+    file:
+      path: /opt/papermc
+      state: directory
 
   - name: "Getting server Jar"
     get_url:
