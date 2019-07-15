@@ -36,6 +36,14 @@
       validate_certs: no
       mode: "0750"
 
+  - name: "Accept PaperMC EULA"
+    lineinfile:
+      path: /opt/papermc/eula.txt
+      line: eula=true
+      create: yes
+      owner: minecraft
+      group: minecraft
+
   - name: "Copy PaperMC systemD config file"
     copy:
       src: /tmp/ansible/minecraft/files/papermc.service
