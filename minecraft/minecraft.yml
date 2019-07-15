@@ -1,0 +1,49 @@
+---
+- name: "Minecrat (PaperMC) server installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Installation of required packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - default-jdk
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+      - tmux
+
+  - name: "Create minecraft user"
+    user:
+      name: minecraft
+      create_home: no
+      password_lock: yes
+
+  - name: "Chown PaperMc directory"
+    file:
+      path: /opt/papermc
+      owner: minecraft
+      group : minecraft
+
+  - name: "Getting server Jar"
+    get_url:
+      url: https://papermc.io/ci/job/Paper/lastSuccessfulBuild/artifact/paperclip.jar
+      dest: /opt/papermc/papermc_server.jar
+      validate_certs: no
+      mode: "0750"
+
+  - name: "Copy PaperMC systemD config file"
+    copy:
+      src: /tmp/ansible/minecraft/files/papermc.service
+      dest: /lib/systemd/system/papermc.service
+
+  - name: "Enable and Start PaperMC Minecraft Server"
+    service:
+      name: "papermc"
+      state: restarted
+      enabled: yes
+
+

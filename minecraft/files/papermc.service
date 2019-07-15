@@ -1,0 +1,15 @@
+[Unit]
+Description=PaperMC Minecraft Server
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=minecraft
+Group=minecraft
+WorkingDirectory=/opt/papermc
+ExecStart=/usr/bin/tmux new-session -d -s papermc "java -jar papermc_server.jar"
+ExecReload=/usr/bin/tmux send-keys -t papermc reload Enter
+ExecStop=/usr/bin/tmux send-keys -t papermc stop Enter
+
+[Install]
+WantedBy=multi-user.target
