@@ -22,13 +22,6 @@
       create_home: no
       password_lock: yes
 
-  - name: "Chown PaperMc directory"
-    file:
-      path: /opt/papermc
-      state: directory
-      owner: minecraft
-      group : minecraft
-
   - name: "Getting server Jar"
     get_url:
       url: https://papermc.io/ci/job/Paper/lastSuccessfulBuild/artifact/paperclip.jar
@@ -41,8 +34,6 @@
       path: /opt/papermc/eula.txt
       line: eula=true
       create: yes
-      owner: minecraft
-      group: minecraft
 
   - name: "Copy PaperMC systemD config file"
     copy:
