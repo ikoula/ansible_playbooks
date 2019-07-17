@@ -1,0 +1,51 @@
+---
+- name: "Update APT cache"
+  apt: update_cache=yes
+
+- name: "Install Apache packages"
+  apt: name={{ item }} state=present
+  with_items:
+    - apache2
+    - libapache2-mod-php7.0
+    - ssl-cert
+
+- name: "Delete Joomla document root directory if exists"
+  file:
+    path: /var/www/html/joomla
+    state: absent
+
+- name: "Create Joomla document root directory"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: www-data
+  with_items:
+    - /var/www
+    - /var/www/html
+    - /var/www/html/joomla
+
+- name: "Enable Apache rewrite and ssl modules"
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - rewrite
+    - ssl
+
+- name: "Copy Joomla apache vhost configuration file"
+  copy:
+    src: /tmp/ansible/joomla/roles/joomla/files/joomla.conf
+    dest: /etc/apache2/sites-available/joomla.conf
+
+- name: "Disable default vhost"
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+
+- name: "Enable Joomla vhost"
+  file:
+    src: /etc/apache2/sites-available/joomla.conf
+    dest: /etc/apache2/sites-enabled/joomla.conf
+    state: link
+...

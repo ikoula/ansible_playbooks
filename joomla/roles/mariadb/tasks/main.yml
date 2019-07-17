@@ -1,0 +1,20 @@
+---
+- name: "Install MySQL packages"
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - mariadb-server
+    - mariadb-client
+    - python-mysqldb
+
+- name: "Create MySQL database for Joomla"
+  mysql_db:
+    name: "{{ joomla_mysql_db }}"
+    state: present
+
+- name: "Create MySQL user for Joomla"
+  mysql_user: 
+    name: "{{ joomla_mysql_user }}" 
+    password: "{{ joomla_mysql_password }}"
+    host: localhost
+    priv: "*.*:ALL"
+...

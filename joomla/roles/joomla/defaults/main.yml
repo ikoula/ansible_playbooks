@@ -1,0 +1,5 @@
+---
+joomla_mysql_db: "joomla"
+joomla_mysql_user: "admin"
+joomla_mysql_password: "ChangeMeAsap"
+...

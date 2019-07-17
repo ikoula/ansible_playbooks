@@ -1,0 +1,12 @@
+---
+- name: "Download Joomla Stable"
+  get_url:
+    url=https://downloads.joomla.org/cms/joomla3/3-9-10/Joomla_3.9.10-Stable-Full_Package.zip
+    dest=/tmp/
+    validate_certs=no
+
+- name: "Extract Joomla to vhost directory"
+  unarchive: src=/tmp/Joomla_3.9.10-Stable-Full_Package.zip dest=/var/www/html/joomla copy=no
+  notify:
+    - restart apache
+...
