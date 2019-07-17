@@ -35,7 +35,7 @@
 
 - name: "Copy Joomla apache vhost configuration file"
   copy:
-    src: /tmp/ansible/joomla/roles/joomla/files/joomla.conf
+    src: /tmp/ansible/joomla/roles/apache/files/joomla.conf
     dest: /etc/apache2/sites-available/joomla.conf
 
 - name: "Disable default vhost"
