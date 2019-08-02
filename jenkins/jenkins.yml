@@ -1,0 +1,37 @@
+---
+- name: "Jenkins installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Installation of some necessary packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - apt-transport-https
+      - software-properties-common
+      - default-jdk
+
+  - name: "Add Jenkins gpg key repository :"
+    apt_key:
+      url: "http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key"
+      state: present
+
+  - name: "Add Jenkins sources repo"
+    apt_repository:
+      repo: "deb http://pkg.jenkins-ci.org/debian-stable binary/"
+      state: present
+      update_cache: no
+
+  - name: "Install Jenkins package from stable repository"
+    apt:
+      name: jenkins
+      state: present
+      update_cache: yes
+
+  - name: "Enable and start Jenkins service"
+    service:
+      name: "jenkins"
+      state: started
+      enabled: yes
+...
