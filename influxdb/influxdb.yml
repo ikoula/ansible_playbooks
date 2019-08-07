@@ -1,0 +1,36 @@
+---
+- name: "InfluxDB installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+
+  - name: "Installation of some necessary packages"
+    apt: name={{ item }} update_cache=yes state=present
+    with_items:
+      - apt-transport-https
+      - software-properties-common
+
+  - name: "Add InfluxDB gpg key repository :"
+    apt_key:
+      url: "https://repos.influxdata.com/influxdb.key"
+      state: present
+
+  - name: "Add InfluxDB sources repo"
+    apt_repository:
+      repo: "deb https://repos.influxdata.com/debian stretch stable"
+      state: present
+      update_cache: no
+
+  - name: "Install influxdb package from stable repository"
+    apt:
+      name: influxdb
+      state: present
+      update_cache: yes
+
+  - name: "Enable and start InfluxDB service"
+    service:
+      name: "influxdb"
+      state: started
+      enabled: yes
+...
