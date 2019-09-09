@@ -1,0 +1,12 @@
+[Unit]
+Description=Freeciv
+WantedBy=multi-user.target
+
+[Service]
+User=freeciv
+Group=freeciv
+Type=simple
+ExecStart=/usr/games/freeciv-server
+
+[Install]
+WantedBy=multi-user.target

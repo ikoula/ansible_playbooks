@@ -1,0 +1,28 @@
+---
+- name: "FreeCIV Server installation"
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: "Create freeciv user"
+    user:
+      name: freeciv
+      create_home: no
+      system: yes
+      shell: "/bin/false"
+      state: present
+
+  - name: "Installation of freeciv-server package"
+    apt: name=freeciv-server update_cache=yes state=present
+
+  - name: "Push FreeCiv Server systemd unit file"
+    copy:
+      src: /tmp/ansible/freeciv/files/freeciv.service
+      dest: /etc/systemd/system/freeciv.service
+
+  - name: "Enable and Start FreeCiv service"
+    service:
+      name: freeciv
+      state: started
+      enabled: yes
+...
