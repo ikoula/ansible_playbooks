@@ -1,0 +1,94 @@
+---
+- name: "Plesk Onyx installation"
+  hosts: all
+  remote_user: root
+  vars_files:
+    - /tmp/ansible/plesk/vars/mainplesk.yml
+
+  tasks:
+
+  - name: "Add Ikoula NTP cron task"
+    shell: echo "00 05 *  * * root /usr/sbin/ntpdate ntp01.ikoula.com" >> /etc/crontab
+
+  - name: "Update and upgrade APT packages"
+    apt:
+      upgrade: dist
+      update_cache: yes  
+
+  - name : "Install tools"
+    apt:
+      name: "{{ item }}"
+      state: present
+      update_cache: yes
+    with_items:
+      - htop
+      - vim
+      - lsof
+      - iftop
+      - php-mcrypt
+
+  - name: "Download Plesk installer"
+    get_url:
+      url: http://autoinstall.plesk.com/plesk-installer
+      dest: /root/plesk-installer
+      mode: 0700
+  
+  - name: "Run Plesk installer"
+    shell: /root/plesk-installer --select-product-id=plesk --select-release-id "{{ plesk_release_id }}" {%if plesk_install_components|length != 0 %} {{ plesk_install_components|join( ' ' ) }} {% else %} --install-everything {% endif %}
+    args:
+      creates: /usr/sbin/plesk
+  
+  - name: "Check whether Plesk has been configured"
+    shell: plesk bin init_conf --check-configured
+    register: result
+    ignore_errors: True
+  
+  - name: "Run Plesk initial configuration"
+    shell: plesk bin init_conf --init -passwd "{{ plesk_admin_password }}" -trial_license true -email "{{ plesk_email }}" -license_agreed true -default-ip "{{ ansible_default_ipv4.address }}" -ip-type shared -hostname "{{ plesk_hostname }}" -send_announce false -company "{{ plesk_company }}" -name "{{ plesk_name }}" -phone "{{ plesk_phone }}" -address "{{ plesk_address }}" -city "{{ plesk_city }}" -state "{{ plesk_state }}" -zip "{{ plesk_zip }} " -country "{{ plesk_country }}"
+    when: result|failed
+  
+  - name: "Import Ikoula logo"
+    get_url:
+      url: http://mirror03.ikoula.com/pub/other/plesk/productlogo.png
+      dest: "{{ item }}"
+      mode: 0644
+      force: yes
+    with_items:
+      - /usr/local/psa/admin/htdocs/theme/images/logos/panel-logo.png
+      - /usr/local/psa/admin/htdocs/theme/images/logos/panel-logo.png
+      - /usr/local/psa/admin/htdocs/theme/images/logos/company-logo.png
+      - /usr/local/psa/admin/htdocs/theme/images/logos/parallels-logo.png
+      - /usr/local/psa/admin/htdocs/theme/images/logos/plesk/logo-web-pro.png
+  
+  - name : "Add order system"
+    shell: /usr/local/psa/bin/panel_gui -p -domain_registration true -domain_registration_url 'http://express.ikoula.com/nom-de-domaine' -cert_purchasing true -cert_purchasing_url 'http://express.ikoula.com/certificats-ssl' -mpc_portal_url 'express.ikoula.com' -extras true -mail_bounce true -promo_virtuozzo false -newsfeeds false
+  
+  - name : "Add custom CSS file configuration"
+    copy:
+      src: /tmp/ansible/plesk/files/custom.css
+      dest: /usr/local/psa/admin/htdocs/theme/css/custom.css
+      owner: root
+      group: root
+      mode: 0644
+  
+  - name : "Activate Fail2ban"
+    shell: /usr/local/psa/admin/bin/f2bmng --enable
+  
+  - name : "Restart Plesk service"
+    service:
+      name: psa
+      state: restarted
+      enabled: yes
+  
+  - name : "Delete tag"
+    file:
+      path: /var/lock/parallels-panel-upgrade-failure.flag
+      state: absent
+  
+  - name: "Modify Plesk Cron Daily for update key"
+    copy:
+      src: /tmp/ansible/plesk/files/50plesk-daily
+      dest: /etc/cron.daily/50plesk-daily
+      owner: root
+      group: root
+      mode: 0755

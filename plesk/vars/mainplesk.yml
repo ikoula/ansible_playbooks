@@ -1,0 +1,14 @@
+---
+plesk_admin_password: changeme
+plesk_email: test@mycompany.com
+plesk_hostname: server.myserver.com
+plesk_company: My Company
+plesk_name: Hosting Services
+plesk_phone: +1234567890
+plesk_address: Address Str. 1
+plesk_city: My City
+plesk_state: My State
+plesk_zip: 12345
+plesk_country: GR
+plesk_release_id: PLESK_17_8_11
+plesk_install_components: [ ]

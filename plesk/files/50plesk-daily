@@ -1,0 +1,10 @@
+#!/bin/sh
+### Copyright 1999-2016. Parallels IP Holdings GmbH. All Rights Reserved.
+
+# install_statistics
+/opt/psa/bin/sw-engine-pleskrun /opt/psa/admin/plib/DailyMaintainance/script.php >/dev/null 2>&1
+
+# install_mysqldump
+/opt/psa/bin/mysqldump.sh >/dev/null 2>&1
+
+sleep $(awk 'BEGIN {srand(); printf "%d\n", rand()*360+180}')
