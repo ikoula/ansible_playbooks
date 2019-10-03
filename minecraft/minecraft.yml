@@ -23,7 +23,7 @@
 
   - name: "Getting server Jar"
     get_url:
-      url: https://papermc.io/ci/job/Paper-{{ paperclip_version }}/lastSuccessfulBuild/artifact/paperclip.jar
+      url: "https://papermc.io/api/v1/paper/{{ paperclip_version }}/latest/download"
       dest: /opt/papermc/papermc_server.jar
       validate_certs: no
       mode: "0750"
@@ -36,7 +36,7 @@
 
   - name: "Copy PaperMC systemD config file"
     copy:
-      src: /tmp/ansible/minecraft/files/papermc.service
+      src: papermc.service
       dest: /lib/systemd/system/papermc.service
 
   - name: "Enable and Start PaperMC Minecraft Server"
