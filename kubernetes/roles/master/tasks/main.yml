@@ -42,6 +42,11 @@
     update_cache: yes
     state: present
 
+- name: "Prevent Docker from being upgraded"
+  dpkg_selections:
+    name: docker-ce
+    selection: hold
+
 - name: "Install Kubernetes master components packages"
   apt: pkg={{ item }} update_cache=yes state=present
   with_items:
