@@ -2,12 +2,11 @@
 - hosts: all
 
   vars:
-    myhostname: "{{ fqdn }}"
-    mydomain: "{{ domain_name }}"
     relayhost: ""
     inet_interfaces: all
     smtp_bind_address: ""
-    inet_protocols: ipv4
+    inet_protocols: all
+
 
   tasks:
     - name: postfix | install
@@ -17,18 +16,12 @@
     - name: postfix | configure
       lineinfile: dest=/etc/postfix/main.cf regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
       with_items:
-          - { regexp: "^myorigin", line: "myorigin = {{ mydomain }}" }
+          - { regexp: "^myorigin", line: "myorigin = {{ DOMAIN_NAME }}" }
           - { regexp: "^relayhost", line: "relayhost = {{ relayhost }}" }
           - { regexp: "^inet_interfaces", line: "inet_interfaces = {{ inet_interfaces }}" }
           - { regexp: "^virtual_maps =", line: "virtual_maps = hash:/etc/aliases" }
           - { regexp: "^home_mailbox =", line: "home_mailbox = Maildir/"}
-      notify: reload postfix
-      tags: postfix
-
-    - name: postfix | configure
-      lineinfile: dest=/etc/postfix/main.cf regexp="{{ item }}" backup=yes state=absent
-      with_items:
-          - "^myhostname"
+          - { regexp: "^myhostname =", line: "myhostname = {{ FQDN }}"}
       notify: reload postfix
       tags: postfix
       
