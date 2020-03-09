@@ -3,10 +3,12 @@
 
   vars:
     myhostname: "{{ fqdn }}"
+    mydomain: "{{ domain_name }}"
     relayhost: ""
-    inet_interfaces: loopback-only
+    inet_interfaces: all
     smtp_bind_address: ""
-    inet_protocols: all
+    inet_protocols: ipv4
+
 
   tasks:
     - name: postfix | install
@@ -16,19 +18,13 @@
     - name: postfix | configure
       lineinfile: dest=/etc/postfix/main.cf regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
       with_items:
-          - { regexp: "^myorigin", line: "myorigin = /etc/mailname" }
-          - { regexp: "^mydestination", line: "mydestination = {{ fqdn }}" }
+          - { regexp: "^myorigin", line: "myorigin = {{ mydomain }}" }
           - { regexp: "^relayhost", line: "relayhost = {{ relayhost }}" }
           - { regexp: "^inet_interfaces", line: "inet_interfaces = {{ inet_interfaces }}" }
           - { regexp: "^virtual_maps =", line: "virtual_maps = hash:/etc/aliases" }
+          - { regexp: "^home_mailbox =", line: "home_mailbox = Maildir/"}
       notify: reload postfix
       tags: postfix
-
-    - name: set the mailname
-      replace:
-        path: /etc/mailname
-        regexp: "Debian10x64.ikoula.com"
-        replace: "{{ fqdn }}"
 
     - name: postfix | configure
       lineinfile: dest=/etc/postfix/main.cf regexp="{{ item }}" backup=yes state=absent
