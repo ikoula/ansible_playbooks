@@ -2,11 +2,8 @@
 - hosts: all
 
   vars:
-    relayhost: ""
     inet_interfaces: all
-    smtp_bind_address: ""
     inet_protocols: all
-
 
   tasks:
     - name: postfix | install
@@ -17,26 +14,16 @@
       lineinfile: dest=/etc/postfix/main.cf regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
       with_items:
           - { regexp: "^myorigin", line: "myorigin = {{ DOMAIN_NAME }}" }
-          - { regexp: "^relayhost", line: "relayhost = {{ relayhost }}" }
           - { regexp: "^inet_interfaces", line: "inet_interfaces = {{ inet_interfaces }}" }
           - { regexp: "^virtual_maps =", line: "virtual_maps = hash:/etc/aliases" }
-          - { regexp: "^home_mailbox =", line: "home_mailbox = Maildir/"}
           - { regexp: "^myhostname =", line: "myhostname = {{ FQDN }}"}
+          - { regexp: "^mynetworks =", line: "mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ MYNETWORKS }}"}
       notify: reload postfix
       tags: postfix
       
     - name: postfix | configure
       lineinfile: dest=/etc/postfix/main.cf regexp="^inet_protocols=" line="inet_protocols={{ inet_protocols }}" backup=yes
       notify: restart postfix
-      tags: postfix
-
-    - name: postfix | setup smtp bind address
-      lineinfile: dest=/etc/postfix/master.cf regexp="^{{ item }}\s+unix" insertafter="^{{ item }}\s+unix" line="{{ item }}      unix  -       -       -       -       -       smtp -o smtp_bind_address={{ smtp_bind_address }}" backup=yes
-      with_items:
-          - smtp
-          - relay
-      when: smtp_bind_address != ""
-      notify: reload postfix
       tags: postfix
 
     - name: postfix | ensure service is running
