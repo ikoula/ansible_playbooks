@@ -1,0 +1,8 @@
+---
+- name: Configure jitsi-meet server.
+  hosts: all
+
+  roles:
+    - role: ansible-role-jitsi-meet
+      become: yes
+      tags: jitsi
