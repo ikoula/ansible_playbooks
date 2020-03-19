@@ -6,3 +6,8 @@
     - role: ansible-role-jitsi-meet
       become: yes
       tags: jitsi
+      jitsi_meet_customize_the_ui: true      
+      jitsi_meet_appname: 'Jitsi-meet powered by Ikoula'
+      jitsi_meet_org_link: 'https://ikoula.com'
+      jitsi_meet_logo_file: images/jitsilogo.png
+      jitsi_meet_watermark_file: images/jitsilogo.png
