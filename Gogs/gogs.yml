@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars:
+    gogs_db_name: gogs
+    gogs_db_username: gogs
+    gogs_db_password: root
+  roles:
+    - ansible-role-gogs
