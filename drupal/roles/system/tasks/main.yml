@@ -7,7 +7,7 @@
   apt: name={{ item }} state=present
   with_items:
     - apache2
-    - mysql-server
+    - mariadb-server
     - php
     - libapache2-mod-php
     - python-mysqldb
