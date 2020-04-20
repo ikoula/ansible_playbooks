@@ -17,10 +17,10 @@
       - python-pip
 
   - name: "Add the MongoDB repo key for APT"
-    apt_key: url=https://www.mongodb.org/static/pgp/server-3.8.asc
+    apt_key: url=https://www.mongodb.org/static/pgp/server-4.2.asc
 
   - name: "Add the APT MongoDB repo"
-    apt_repository: repo='deb http://repo.mongodb.org/apt/debian/dists/buster/mongodb-org/4.3/ main' update_cache=yes state=present
+    apt_repository: repo='deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main' update_cache=yes state=present
 
   - name: "Installation of MongoDB"
     apt: name=mongodb update_cache=yes state=present
