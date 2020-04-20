@@ -63,14 +63,14 @@
       - apache2-doc
       - apache2-utils
       - libapache2-mod-php
-      - php7.0
-      - php7.0-common
-      - php7.0-gd
-      - php7.0-mysql
-      - php7.0-imap
+      - php7.1
+      - php7.1-common
+      - php7.1-gd
+      - php7.1-mysql
+      - php7.1-imap
       - phpmyadmin
-      - php7.0-cli
-      - php7.0-cgi
+      - php7.1-cli
+      - php7.1-cgi
       - libapache2-mod-fcgid
       - apache2-suexec-pristine
       - php-pear
@@ -79,20 +79,20 @@
       - imagemagick
       - libruby
       - libapache2-mod-python
-      - php7.0-curl
-      - php7.0-intl
-      - php7.0-pspell
-      - php7.0-recode
-      - php7.0-sqlite3
-      - php7.0-tidy
-      - php7.0-xmlrpc
-      - php7.0-xsl
+      - php7.1-curl
+      - php7.1-intl
+      - php7.1-pspell
+      - php7.1-recode
+      - php7.1-sqlite3
+      - php7.1-tidy
+      - php7.1-xmlrpc
+      - php7.1-xsl
       - memcached
       - php-memcache
       - php-imagick
       - php-gettext
-      - php7.0-zip
-      - php7.0-mbstring
+      - php7.1-zip
+      - php7.1-mbstring
       - memcached
       - libapache2-mod-passenger
       - php7.0-soap
