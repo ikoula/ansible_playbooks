@@ -74,7 +74,7 @@
       - libapache2-mod-fcgid
       - apache2-suexec-pristine
       - php-pear
-      - php7.0-mcrypt
+      - php7.1-mcrypt
       - mcrypt
       - imagemagick
       - libruby
