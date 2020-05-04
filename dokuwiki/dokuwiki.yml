@@ -2,8 +2,10 @@
   become: yes
   become_method: sudo
   roles:
+  - role: role-apache2
   - role: role-dokuwiki
   vars:
+    apache2_php: true
     dokuwiki_base: /var/www/html
     dokuwiki_configure_apache2: true
     dokuwiki_plugins:
