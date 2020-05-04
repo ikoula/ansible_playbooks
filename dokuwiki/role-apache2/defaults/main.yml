@@ -22,7 +22,7 @@ apache2_modules_enabled:
   - rewrite
   - ssl
 apache2_php: false
-apache2_php_allow_url_fopen: "Off"
+apache2_php_allow_url_fopen: "On"
 apache2_php_allow_url_include: "Off"
 apache2_php_assert_active: "0"
 apache2_php_default_charset: "\"UTF-8\""
