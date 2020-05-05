@@ -1,0 +1,112 @@
+---
+- name: Install php7.3
+  apt: 
+    name: php7.3-fpm
+    state: present
+
+- name: Install php7.3-common
+  apt: 
+    name: php7.3-common
+    state: present    
+
+- name: Install php7.3-xmlrpc
+  apt: 
+    name: php7.3-xmlrpc
+    state: present
+
+- name: Install php7.3-mbstring
+  apt: 
+    name: php7.3-mbstring
+    state: present  
+
+- name: Install php7.3-sqlite3
+  apt: 
+    name: php7.3-sqlite3
+    state: present
+
+- name: Install php7.3-soap
+  apt: 
+    name: php7.3-soap
+    state: present    
+
+- name: Install php7.3-gd
+  apt: 
+    name: php7.3-gd
+    state: present
+
+- name: Install php7.3-xml
+  apt: 
+    name: php7.3-xml
+    state: present      
+
+- name: Install php7.3-cli
+  apt: 
+    name: php7.3-cli
+    state: present
+
+- name: Install php7.3-tidy
+  apt: 
+    name: php7.3-tidy
+    state: present  
+
+- name: Install php7.3-intl
+  apt: 
+    name: php7.3-intl
+    state: present
+
+- name: Install php7.3-json
+  apt: 
+    name: php7.3-json
+    state: present      
+
+- name: Install php7.3-curl
+  apt: 
+    name: php7.3-curl
+    state: present
+
+- name: Install php7.3-zip
+  apt: 
+    name: php7.3-zip
+    state: present     
+
+- name: Set date.timezone for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "date.timezone ="
+    line: "date.timezone = UTC"
+
+- name: Set url fopen to On
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "allow_url_fopen ="
+    line: "allow_url_fopen = On"
+
+- name: Set memory limit to 256M
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "memory_limit ="
+    line: "memory_limit = 256M"
+
+- name: Set cgi.fix to 0
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "cgi.fix_pathinfo ="
+    line: "cgi.fix_pathinfo = 0"
+
+- name: Set upload max file size
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "upload_max_filesize ="
+    line: "upload_max_filesize = 100M"
+
+- name: Set Max execution time
+  become: true
+  lineinfile:
+    dest: /etc/php/7.3/fpm/php.ini
+    regexp: "max_execution_time ="
+    line: "max_execution_time = 360"

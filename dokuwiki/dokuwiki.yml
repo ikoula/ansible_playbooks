@@ -1,36 +1,9 @@
-- hosts: all
-  become: yes
-  become_method: sudo
+---
+- name: Install dokuwiki
+  hosts: all
+  user: root
+  
   roles:
-  - role: role-apache2
-  - role: role-dokuwiki
-  vars: 
-    apache2_php: true
-    apache2_php_allow_url_fopen: "On"
-    dokuwiki_base: /var/www/html
-    dokuwiki_configure_apache2: true
-    dokuwiki_plugins:
-      - name: tag
-        src: https://github.com/dokufreaks/plugin-tag/tarball/master
-      - name: pagelist
-        src: https://github.com/dokufreaks/plugin-pagelist/tarball/master
-    dokuwiki_plugins_remove:
-      - name: authad
-      - name: authldap
-      - name: authmysql
-      - name: authpdo
-      - name: authpgsql
-      - name: info
-      - name: popularity
-    dokuwiki_preconfigure: true
-    dokuwiki_savedir: /var/www/html/data
-    dokuwiki_template: bootstrap3
-    dokuwiki_templates:
-      - name: bootstrap3
-        src: https://github.com/LotarProject/dokuwiki-template-bootstrap3/tarball/master
-    dokuwiki_users:
-      - login: admin
-        hash: "$2y$05$Nr3wFqH54gcdhxPK9easseLSVwLAnLTD2flYmQbAbCVIiiTU4mCjS"
-        name: Administrator
-        email: admin@admin
-        groups: admin,user
+   - { role: nginx, configuration_file: 'roles/dokuwiki/templates/default.conf', dest: dokuwiki }
+   - php7.3-fpm
+   - dokuwiki

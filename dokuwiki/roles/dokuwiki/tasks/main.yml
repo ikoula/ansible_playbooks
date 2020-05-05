@@ -1,0 +1,23 @@
+---
+ - name: Download latest stable dokuwiki tarball
+   get_url: url=http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz dest=/var/tmp/dokuwiki-stable.tgz
+
+ - name: Unpack tarball
+   command: tar -xvf dokuwiki-stable.tgz chdir=/var/tmp
+   
+ - name: create the directory for dokuwiki
+   shell: mkdir /var/www/html/dokuwiki
+
+ - name: Move dokuwiki
+   shell: mv /var/tmp/dokuwiki-2018-04-22c/* /var/www/html/dokuwiki/
+
+ - name: Delete default nginx html file
+   shell: rm -f /var/www/html/index.nginx-debian.html
+
+ - name: Fix permissions
+   shell: chown -R www-data /var/www/html/dokuwiki/*
+
+ - name: Fix permissions
+   shell: chmod -R 755 /var/www/html/dokuwiki
+
+   notify: restart nginx
