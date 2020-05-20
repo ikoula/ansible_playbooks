@@ -5,7 +5,7 @@
     - php7.2-mysql
     - php7.2
     - php7.2-gd 
-    - php7.2-ssh2
+    - php-ssh2
     - php7.2-xml
     - php7.2-mcrypt
     - php7.2-opcache
