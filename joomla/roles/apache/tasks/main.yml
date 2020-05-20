@@ -6,7 +6,7 @@
   apt: name={{ item }} state=present
   with_items:
     - apache2
-    - libapache2-mod-php7.0
+    - libapache2-mod-php7.2
     - ssl-cert
 
 - name: "Delete Joomla document root directory if exists"
