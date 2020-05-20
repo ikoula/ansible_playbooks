@@ -14,12 +14,12 @@
 
   - name: "Add Jenkins gpg key repository :"
     apt_key:
-      url: "http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key"
+      url: "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
       state: present
 
   - name: "Add Jenkins sources repo"
     apt_repository:
-      repo: "deb http://pkg.jenkins-ci.org/debian-stable binary/"
+      repo: "deb https://pkg.jenkins.io/debian-stable binary/"
       state: present
       update_cache: no
 
