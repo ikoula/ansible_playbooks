@@ -20,7 +20,7 @@
 - name: "Install Drupal using composer"
   composer:
     command: create-project
-    arguments: drupal-composer/drupal-project:8.x-dev /var/www/html/drupal --stability dev --no-interaction
+    arguments: drupal-composer/drupal-project:9.x-dev /var/www/html/drupal --stability dev --no-interaction
     working_dir: /var/www/html/drupal
     prefer_dist: yes
   become: true
@@ -29,7 +29,7 @@
 - name: "Install Drupal dependencies"
   composer:
     command: require
-    arguments: drupal/devel:~1.0
+    arguments: drupal/devel:~4.0
     working_dir: /var/www/html/drupal
     prefer_dist: yes
   become: true
