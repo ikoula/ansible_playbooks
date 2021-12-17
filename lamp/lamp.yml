@@ -16,7 +16,7 @@
       - php-mysql
       - php
       - libapache2-mod-php
-      - python-mysqldb
+      - python3-mysqldb
 
   - name: "Create mysql database"
     mysql_db: name={{ MYSQL_USER_DB }} state=present
