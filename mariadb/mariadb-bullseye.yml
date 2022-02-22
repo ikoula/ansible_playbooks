@@ -1,0 +1,22 @@
+---
+- name: "MariaDB installation (with one DB and User)"
+  hosts: all
+
+  tasks:
+
+  - name: "Install MariaDB packages"
+    apt:
+     pkg:
+      - mariadb-server
+      - python3-mysqldb
+
+  - name: "Create MariaDB database"
+    mysql_db: name={{ MARIADB_USER_DB }} state=present
+
+  - name: "Create MariaDB user"
+    mysql_user:
+      name={{ MARIADB_USER }}
+      password={{ MARIADB_USER_PASS }}
+      state=present
+      priv='*.*:ALL'
+...
