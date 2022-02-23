@@ -1,72 +1,45 @@
 ---
 - hosts: all
-  user: root
-  gather_facts: false
-  
+
   tasks:
 
   - name: "Install prerequisite packages"
     apt:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-      - apt-transport-https
-      - dirmngr
-      - gnupg
-      - ca-certificates
-      - python-mysqldb
+            pkg:
+                    - docker-compose
 
-  - name: "Install GPG key for APT repo"
-    apt_key:
-      #url: "hkp://keyserver.ubuntu.com:80"
-      keyserver: keyserver.ubuntu.com
-      id: "{{ item }}"
-      state: present
-    with_items:
-      - 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-      - CB2DE8E5
+  - name: "Telechargement onlyoffice github"
+    ansible.builtin.git:
+            repo: 'https://github.com/ONLYOFFICE/Docker-CommunityServer'
+            dest: /root/Docker-CommunityServer
+            version: v11.6.0.1620
 
-  - name: "Add Mono and OnlyOffice APT repo"
-    apt_repository:
-      repo: "{{ item.urlrepo }}"
-      filename: "{{ item.filenamerepo }}"
-      state: present
-      update_cache: yes
-    with_items:
-      - {'urlrepo': "deb https://download.mono-project.com/repo/debian stable-stretch main", 'filenamerepo': "mono"}
-      - {'urlrepo': "deb http://download.onlyoffice.com/repo/debian squeeze main", 'filenamerepo': "onlyoffice"}
+  - name: "Creation fichier docker-compose"
+    copy:
+            src: /root/Docker-CommunityServer/docker-compose.groups.yml
+            dest: /root/Docker-CommunityServer/docker-compose.yml
 
-  - name: "Get Node.js setup script"
-    get_url:
-      url: https://deb.nodesource.com/setup_11.x
-      dest: /tmp/setup_11.x
-      validate_certs: no
-      mode: "0750"
+  - name: "start docker compose"
+    community.docker.docker_compose:
+            project_name: Docker-CommunityServer
+            project_src: /root/Docker-CommunityServer/
+            state: present
 
-  - name: "Execute Node.js setup script"
-    shell: /tmp/setup_11.x
-  
-  - name: "Set MySQL root password before installing"
-    debconf: 
-      name: "mysql-server"
-      question: "mysql-server/root_password"
-      value: "{{ mysql_root_password }}"
-      vtype: "password"
+  - name: "recup nom de IP"
+    shell: hostname -I | cut -d ' ' -f 1
+    register:  IP_ADDRESS
+  - name: "recup FQDN"
+    shell: curl -sk "https://revprx.ikoula.com/index.php?r=wsds/GetServerNameByIp&IP="{{ IP_ADDRESS.stdout }} | awk -F ':' '{ print $4}' | tr -d '}' | tr -d '"' | tr '[:upper:]' '[:lower:]'
+    register: FQDN
 
-  - name: "Confirm MySQL root password before installing"
-    debconf:
-      name: "mysql-server"
-      question: "mysql-server/root_password_again"
-      value: "{{ mysql_root_password }}"
-      vtype: "password"
-
-  - name: "Install Node.js, Mono and OnlyOffice community server packages"
-    apt:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-      - nodejs
-      - mono-complete
-      - onlyoffice-communityserver
-
-...
+  - name: "Installation lets-encrypt"
+    community.docker.docker_container_exec:
+            container: onlyoffice-community-server
+            argv:
+                    - /bin/bash
+                    - "-c"
+                    - "/var/www/onlyoffice/Tools/letsencrypt.sh {{ FQDN.stdout }}"
+    register: letsencypt
+    until: letsencypt.rc != 0
+    retries: 5
+    delay: 160
