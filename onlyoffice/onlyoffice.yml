@@ -40,6 +40,6 @@
                     - "-c"
                     - "/var/www/onlyoffice/Tools/letsencrypt.sh {{ FQDN.stdout }}"
     register: letsencypt
-    until: letsencypt.rc != 0
+    until: letsencypt.rc == 0
     retries: 5
     delay: 160
