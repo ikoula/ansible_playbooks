@@ -2,21 +2,21 @@
 - name: "Install PHP packages/extensions"
   apt: name={{ item }} state=present update_cache=yes
   with_items:
-    - php7.0-mysql
-    - php7.0
-    - php7.0-gd 
+    - php7.4-mysql
+    - php7.4
+    - php7.4-gd 
     - php-ssh2
-    - php7.0-xml
-    - php7.0-mcrypt
-    - php7.0-opcache
-    - php7.0-mbstring
-    - php7.0-json
-    - php7.0-zip
+    - php7.4-xml
+    - php7.4-mcrypt
+    - php7.4-opcache
+    - php7.4-mbstring
+    - php7.4-json
+    - php7.4-zip
 
 - name: "Copy PHP.ini configuration file"
   copy:
     src: /tmp/ansible/joomla/roles/php/files/php.ini
-    dest: /etc/php/7.1/apache2/php.ini
+    dest: /etc/php/7.4/apache2/php.ini
   notify:
     - restart apache
 ...
