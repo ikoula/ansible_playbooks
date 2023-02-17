@@ -3,11 +3,11 @@
   apt: update_cache=yes
 
 - name: "Install LAMP packages"
-    apt:
-      pkg:
-        - apache2
-        - mysql-server
-        - php-mysql
-        - php
-        - libapache2-mod-php
-        - python-mysqldb
+  apt:
+    pkg:
+      - apache2
+      - mysql-server
+      - php-mysql
+      - php
+      - libapache2-mod-php
+      - python-mysqldb
