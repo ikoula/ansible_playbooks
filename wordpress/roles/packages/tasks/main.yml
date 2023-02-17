@@ -3,7 +3,7 @@
   apt: update_cache=yes
 
 - name: "Install LAMP packages"
-  apt: name={{ item }} state=present
+  apt: name=name:['apache2', 'mysql-server', 'php-mysql', 'php', 'libapache2-mod-php', 'python-mysqldb'] state=present
   with_items:
     - apache2
     - mysql-server
